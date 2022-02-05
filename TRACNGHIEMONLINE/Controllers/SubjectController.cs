@@ -59,7 +59,9 @@ namespace TRACNGHIEMONLINE.Controllers
             var user = HttpContext.Session.Get<User>(UserSession.USER);
             if (ModelState.IsValid && isLogin && user.IsAdmin())
             {
-                bool exitName = subjectRepository.GetAll().Any(x => x.Subject_name.Equals(model.Subject_name));
+                bool exitName = subjectRepository.GetAll()
+                    .Any(x => x.Subject_name.Equals(model.Subject_name));
+                // Check exit name subject
                 if (exitName)
                 {
                     ViewBag.error = "Đã tồn tại môn học cùng tên";
@@ -78,7 +80,6 @@ namespace TRACNGHIEMONLINE.Controllers
             else
             {
                 return Redirect("/subject/create");
-                // return View("Views/Admin/Admin.cshtml");
             }
 
         }
