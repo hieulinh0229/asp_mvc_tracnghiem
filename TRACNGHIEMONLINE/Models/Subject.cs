@@ -20,6 +20,7 @@ namespace TRACNGHIEMONLINE.Models
         [Key]
         public int Id_subject { get; set; }
         public string Subject_name { get; set; }
+        public string Description { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
          }
 }
