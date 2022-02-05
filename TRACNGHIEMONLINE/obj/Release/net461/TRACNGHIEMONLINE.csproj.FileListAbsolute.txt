@@ -1,0 +1,4 @@
+C:\Users\ASUS\source\repos\TRACNGHIEMONLINE\TRACNGHIEMONLINE\obj\Release\net461\TRACNGHIEMONLINE.csproj.AssemblyReference.cache
+C:\Users\ASUS\source\repos\TRACNGHIEMONLINE\TRACNGHIEMONLINE\obj\Release\net461\TRACNGHIEMONLINE.AssemblyInfoInputs.cache
+C:\Users\ASUS\source\repos\TRACNGHIEMONLINE\TRACNGHIEMONLINE\obj\Release\net461\TRACNGHIEMONLINE.AssemblyInfo.cs
+C:\Users\ASUS\source\repos\TRACNGHIEMONLINE\TRACNGHIEMONLINE\obj\Release\net461\TRACNGHIEMONLINE.csproj.CoreCompileInputs.cache
