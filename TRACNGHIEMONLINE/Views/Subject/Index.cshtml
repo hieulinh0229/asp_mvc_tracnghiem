@@ -287,7 +287,7 @@
                                     @for (var i = 0; i < subjects.Length; i++)
                                     {
                                         var sub = subjects[i];
-                                        var test = sub == null ? null : sub.Tests.ToArray();
+                                        var tests = sub == null ? null : sub.Tests.ToArray();
                                         var index = @i + 1;
                                         <h6 class="card-title">
                                             <a href="javascript:void(0)">
@@ -295,39 +295,62 @@
                                                 @sub.Subject_name
                                             </a>
                                         </h6>
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">First</th>
-                                                        <th scope="col">Last</th>
-                                                        <th scope="col">Handle</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>Mark</td>
-                                                        <td>Otto</td>
-                                                        <td>mdo</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">2</th>
-                                                        <td>Jacob</td>
-                                                        <td>Thornton</td>
-                                                        <td>fat</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">3</th>
-                                                        <td>Larry</td>
-                                                        <td>the Bird</td>
-                                                        <td>twitter</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+
+                                        @if (tests == null || tests.Length == 0)
+                                        {
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    <span style="color:red">Không có bài kiểm tra </span>
+                                                </div>
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <h6 class="card-title">
+                                                <a >
+                                                    <i>- DS Bài kiểm tra</i>
+                                                </a>
+                                            </h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Tên bài kiểm tra</th>
+                                                            <th scope="col">Tổng số câu hỏi</th>
+                                                            <th scope="col">Ghi chú</th>
+                                                            <th scope="col">Trạng thái</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (var j = 0; j < subjects.Length; i++)
+                                                        {
+                                                            var test = tests[j];
+                                                            if (test != null)
+                                                            {
+                                                                <tr>
+                                                                    <th scope="row">@j +1</th>
+
+                                                                    <td>@test.Test_name</td>
+
+                                                                    <td>@test.Total_questions</td>
+
+                                                                    <td>@test.Note</td>
+                                                                    <td>@test.Status</td>
+
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                    </tbody>
+
+                                               </table>
+
+                                           </div>
+                                        }
                                     }
+
 
                                 </div>
                                 <h4 class="card-title">
