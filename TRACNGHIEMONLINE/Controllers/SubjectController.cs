@@ -26,6 +26,8 @@ namespace TRACNGHIEMONLINE.Controllers
             if (isLogin)
             {
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
+                var listSub = subjectRepository.GetAll().ToArray();
+                ViewData["SUBS"] = listSub;
                 return View(user);
             }
             else

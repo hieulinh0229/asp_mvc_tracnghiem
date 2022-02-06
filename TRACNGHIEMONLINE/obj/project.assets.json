@@ -8173,11 +8173,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ASUS\\source\\repos\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE.csproj",
+      "projectUniqueName": "C:\\Users\\ASUS\\source\\repos\\asp_mvc_tracnghiem\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE.csproj",
       "projectName": "TRACNGHIEMONLINE",
-      "projectPath": "C:\\Users\\ASUS\\source\\repos\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE.csproj",
+      "projectPath": "C:\\Users\\ASUS\\source\\repos\\asp_mvc_tracnghiem\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE.csproj",
       "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ASUS\\source\\repos\\TRACNGHIEMONLINE\\TRACNGHIEMONLINE\\obj\\",
+      "outputPath": "C:\\Users\\ASUS\\source\\repos\\asp_mvc_tracnghiem\\TRACNGHIEMONLINE\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config",

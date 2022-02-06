@@ -5,6 +5,7 @@
     var user = Model;
     ViewBag.Title = user.IsAdmin() ? "Quản Lý Môn Học" : "Môn học";
     Layout = "";
+    Subject[] subjects = ViewData["SUBS"] as Subject[];
 
 }
 <!DOCTYPE html>
@@ -268,10 +269,10 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h6 class="card-title">
-                                    <i class="m-r-5 font-18 mdi mdi-numeric-1-box-multiple-outline"></i>
-                                    Danh sách môn học và bài kiểm tra
-                                </h6>
+                                <h4 class="card-title">
+                                    <i class="m-r-5 font-22 mdi mdi-numeric-1-box-multiple-outline"></i>
+                                    Danh sách môn học 
+                                </h4>
                                 <div class=" m-t-10">
                                     <a href="/subject/create">
                                         <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới môn học</span>
@@ -282,43 +283,57 @@
                                         <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới bài kiểm tra</span>
                                     </a>
                                 </div>
-
                                 <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">First</th>
-                                                <th scope="col">Last</th>
-                                                <th scope="col">Handle</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>mdo</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Jacob</td>
-                                                <td>Thornton</td>
-                                                <td>fat</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Larry</td>
-                                                <td>the Bird</td>
-                                                <td>twitter</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    @for (var i = 0; i < subjects.Length; i++)
+                                    {
+                                        var sub = subjects[i];
+                                        var test = sub == null ? null : sub.Tests.ToArray();
+                                        var index = @i + 1;
+                                        <h6 class="card-title">
+                                            <a href="javascript:void(0)">
+                                                <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
+                                                @sub.Subject_name
+                                            </a>
+                                        </h6>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">First</th>
+                                                        <th scope="col">Last</th>
+                                                        <th scope="col">Handle</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td>Mark</td>
+                                                        <td>Otto</td>
+                                                        <td>mdo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">2</th>
+                                                        <td>Jacob</td>
+                                                        <td>Thornton</td>
+                                                        <td>fat</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">3</th>
+                                                        <td>Larry</td>
+                                                        <td>the Bird</td>
+                                                        <td>twitter</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+
                                 </div>
-                                <h6 class="card-title">
-                                    <i class="m-r-5 font-18 mdi mdi-numeric-2-box-multiple-outline"></i>
+                                <h4 class="card-title">
+                                    <i class="m-r-5 font-22 mdi mdi-numeric-2-box-multiple-outline"></i>
                                     Danh sách lớp học
-                                </h6>
+                                </h4>
                                 <div class=" m-t-10">
                                     <a href="javascript:void(0)">
                                         <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới lớp học</span>
@@ -358,10 +373,10 @@
                                     </table>
                                 </div>
                             </div>
-                          
+
                         </div>
                     </div>
-                
+
                 </div>
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->

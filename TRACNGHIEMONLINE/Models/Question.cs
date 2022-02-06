@@ -9,6 +9,10 @@ namespace TRACNGHIEMONLINE.Models
 {
     public class Question
     {
+        public Question()
+        {
+            this.Tests = new HashSet<Test>();
+        }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id_question { get; set; }
@@ -21,8 +25,7 @@ namespace TRACNGHIEMONLINE.Models
         public string Answer_d { get; set; }
         public string Correct_answer { get; set; }
         public Nullable<System.DateTime> Timestamps { get; set; }
-
+        public virtual ICollection<Test> Tests { get; set; }
         public virtual Subject Subject { get; set; }
-     
     }
 }

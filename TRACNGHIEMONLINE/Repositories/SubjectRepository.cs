@@ -32,7 +32,8 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public void Insert(Subject obj)
         {
-            throw new NotImplementedException();
+            _context.Add<Subject>(obj);
+            _context.SaveChanges();
         }
 
         public void Save()
