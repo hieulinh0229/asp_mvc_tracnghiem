@@ -15,10 +15,12 @@ namespace TRACNGHIEMONLINE.Controllers
 
     {
         public readonly ISubjectRepository subjectRepository;
+        public readonly IClassRepository classRepository;
 
-        public SubjectController(ISubjectRepository subjectRepository)
+        public SubjectController(ISubjectRepository subjectRepository, IClassRepository classRepository)
         {
             this.subjectRepository = subjectRepository;
+            this.classRepository = classRepository;
         }
         public IActionResult Index()
         {
@@ -27,6 +29,8 @@ namespace TRACNGHIEMONLINE.Controllers
             {
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
                 var listSub = subjectRepository.GetAll().ToArray();
+                var classes = classRepository.GetAll().ToArray();
+                ViewData["CLASS"] = classes;
                 ViewData["SUBS"] = listSub;
                 return View(user);
             }
