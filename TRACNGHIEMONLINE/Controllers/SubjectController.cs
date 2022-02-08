@@ -89,5 +89,40 @@ namespace TRACNGHIEMONLINE.Controllers
             }
 
         }
+        public IActionResult CreateTypeExam()
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            var user = HttpContext.Session.Get<User>(UserSession.USER);
+            var listSub = subjectRepository.GetAll().ToArray();
+            ViewData["SUBS"] = listSub;
+            if (isLogin && user.IsAdmin())
+            {
+                ViewData["USER"] = user;
+                return View();
+            }
+            else
+            {
+                return Redirect("/login");
+                // return View("Views/Admin/Admin.cshtml");
+            }
+
+        }
+        [HttpPost]
+        public IActionResult CreateTypeExam(TypeExamModel model)
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            var user = HttpContext.Session.Get<User>(UserSession.USER);
+            if (ModelState.IsValid && isLogin && user.IsAdmin())
+            {
+              
+              
+                return RedirectToAction("Index", "Subject");
+            }
+            else
+            {
+                return Redirect("/subject/create");
+            }
+
+        }
     }
 }
