@@ -18,7 +18,6 @@ namespace TRACNGHIEMONLINE.Models
         public int Id_status { get; set; }
         public string Status_name { get; set; }
         public Nullable<System.DateTime> Timestamps { get; set; }
-
         public virtual ICollection<Test> Tests { get; set; }
     }
 }

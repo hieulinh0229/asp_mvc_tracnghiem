@@ -12,6 +12,7 @@ namespace TRACNGHIEMONLINE.Models
         public Student()
         {
             this.Tests = new HashSet<Test>();
+            this.Class = new HashSet<Class>();
         }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -25,12 +26,11 @@ namespace TRACNGHIEMONLINE.Models
         public string Address { get; set; }
         public System.DateTime Birthday { get; set; }
         public string Phone { get; set; }
-        public Nullable<int> is_testing { get; set; }
         public Nullable<System.DateTime> time_start { get; set; }
         public string time_remaining { get; set; }
         public Nullable<System.DateTime> last_login { get; set; }
         public virtual ICollection<Test> Tests { get; set; }
         public virtual Permission permission { get; set; }
-        public virtual Class Class { get; set; }
+        public virtual ICollection<Class> Class { get; set; }
     }
 }

@@ -12,18 +12,17 @@ namespace TRACNGHIEMONLINE.Models
         public Test()
         {
             this.Questions = new HashSet<Question>();
-            this.Scores = new HashSet<Score>();
         }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public string Id_test { get; set; }
         public string Test_name { get; set; }
-        public int Total_questions { get; set; }
-        public int Time_to_do { get; set; }
         public string Note { get; set; }
         public Nullable<System.DateTime> Timestamps { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
-        public virtual ICollection<Score> Scores { get; set; }
+        public virtual Student Student { get; set; }
+        public virtual Score Score { get; set; }
+        public virtual TypeExam Type { get; set; }
         public virtual Status Status { get; set; }
         public virtual Subject Subject { get; set; }
     }
