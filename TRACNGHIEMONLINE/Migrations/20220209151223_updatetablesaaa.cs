@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TRACNGHIEMONLINE.Migrations
 {
-    public partial class InitialCreate4 : Migration
+    public partial class updatetablesaaa : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,8 @@ namespace TRACNGHIEMONLINE.Migrations
                 {
                     Id_class = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Class_name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Class_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,6 +32,21 @@ namespace TRACNGHIEMONLINE.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissions", x => x.Id_permission);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Scores",
+                columns: table => new
+                {
+                    Id_score = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id_code = table.Column<int>(type: "int", nullable: false),
+                    Time_finish = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Score_number = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Scores", x => x.Id_score);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,11 +69,27 @@ namespace TRACNGHIEMONLINE.Migrations
                 {
                     Id_subject = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Subject_name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Subject_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Subjects", x => x.Id_subject);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TypeExams",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Total_questions = table.Column<int>(type: "int", nullable: false),
+                    Time_to_do = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TypeExams", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,64 +137,19 @@ namespace TRACNGHIEMONLINE.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    is_testing = table.Column<int>(type: "int", nullable: true),
                     time_start = table.Column<DateTime>(type: "datetime2", nullable: true),
                     time_remaining = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     last_login = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    permissionId_permission = table.Column<int>(type: "int", nullable: true),
-                    ClassId_class = table.Column<int>(type: "int", nullable: true)
+                    permissionId_permission = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id_student);
                     table.ForeignKey(
-                        name: "FK_Students_Classes_ClassId_class",
-                        column: x => x.ClassId_class,
-                        principalTable: "Classes",
-                        principalColumn: "Id_class",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Students_Permissions_permissionId_permission",
                         column: x => x.permissionId_permission,
                         principalTable: "Permissions",
                         principalColumn: "Id_permission",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tests",
-                columns: table => new
-                {
-                    Id_test = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Test_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Total_questions = table.Column<int>(type: "int", nullable: false),
-                    Time_to_do = table.Column<int>(type: "int", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamps = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    StatusId_status = table.Column<int>(type: "int", nullable: true),
-                    SubjectId_subject = table.Column<int>(type: "int", nullable: true),
-                    StudentId_student = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tests", x => x.Id_test);
-                    table.ForeignKey(
-                        name: "FK_Tests_Statuses_StatusId_status",
-                        column: x => x.StatusId_status,
-                        principalTable: "Statuses",
-                        principalColumn: "Id_status",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tests_Students_StudentId_student",
-                        column: x => x.StudentId_student,
-                        principalTable: "Students",
-                        principalColumn: "Id_student",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tests_Subjects_SubjectId_subject",
-                        column: x => x.SubjectId_subject,
-                        principalTable: "Subjects",
-                        principalColumn: "Id_subject",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -181,8 +168,7 @@ namespace TRACNGHIEMONLINE.Migrations
                     Answer_d = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Correct_answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timestamps = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SubjectId_subject = table.Column<int>(type: "int", nullable: true),
-                    TestId_test = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    SubjectId_subject = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,43 +179,127 @@ namespace TRACNGHIEMONLINE.Migrations
                         principalTable: "Subjects",
                         principalColumn: "Id_subject",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Questions_Tests_TestId_test",
-                        column: x => x.TestId_test,
-                        principalTable: "Tests",
-                        principalColumn: "Id_test",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Scores",
+                name: "SubjectTypeExam",
                 columns: table => new
                 {
-                    Id_score = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id_student = table.Column<int>(type: "int", nullable: false),
-                    Id_code = table.Column<int>(type: "int", nullable: false),
-                    Time_finish = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Score_number = table.Column<double>(type: "float", nullable: false),
-                    Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StudentId_student = table.Column<int>(type: "int", nullable: true),
-                    TestId_test = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    SubjectsId_subject = table.Column<int>(type: "int", nullable: false),
+                    TypeExamsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Scores", x => x.Id_score);
+                    table.PrimaryKey("PK_SubjectTypeExam", x => new { x.SubjectsId_subject, x.TypeExamsId });
                     table.ForeignKey(
-                        name: "FK_Scores_Students_StudentId_student",
+                        name: "FK_SubjectTypeExam_Subjects_SubjectsId_subject",
+                        column: x => x.SubjectsId_subject,
+                        principalTable: "Subjects",
+                        principalColumn: "Id_subject",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectTypeExam_TypeExams_TypeExamsId",
+                        column: x => x.TypeExamsId,
+                        principalTable: "TypeExams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClassStudent",
+                columns: table => new
+                {
+                    ClassId_class = table.Column<int>(type: "int", nullable: false),
+                    StudentsId_student = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClassStudent", x => new { x.ClassId_class, x.StudentsId_student });
+                    table.ForeignKey(
+                        name: "FK_ClassStudent_Classes_ClassId_class",
+                        column: x => x.ClassId_class,
+                        principalTable: "Classes",
+                        principalColumn: "Id_class",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClassStudent_Students_StudentsId_student",
+                        column: x => x.StudentsId_student,
+                        principalTable: "Students",
+                        principalColumn: "Id_student",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tests",
+                columns: table => new
+                {
+                    Id_test = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Test_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Timestamps = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StudentId_student = table.Column<int>(type: "int", nullable: true),
+                    ScoreId_score = table.Column<int>(type: "int", nullable: true),
+                    TypeId = table.Column<int>(type: "int", nullable: true),
+                    StatusId_status = table.Column<int>(type: "int", nullable: true),
+                    SubjectId_subject = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tests", x => x.Id_test);
+                    table.ForeignKey(
+                        name: "FK_Tests_Scores_ScoreId_score",
+                        column: x => x.ScoreId_score,
+                        principalTable: "Scores",
+                        principalColumn: "Id_score",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tests_Statuses_StatusId_status",
+                        column: x => x.StatusId_status,
+                        principalTable: "Statuses",
+                        principalColumn: "Id_status",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tests_Students_StudentId_student",
                         column: x => x.StudentId_student,
                         principalTable: "Students",
                         principalColumn: "Id_student",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Scores_Tests_TestId_test",
-                        column: x => x.TestId_test,
+                        name: "FK_Tests_Subjects_SubjectId_subject",
+                        column: x => x.SubjectId_subject,
+                        principalTable: "Subjects",
+                        principalColumn: "Id_subject",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tests_TypeExams_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "TypeExams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuestionTest",
+                columns: table => new
+                {
+                    QuestionsId_question = table.Column<int>(type: "int", nullable: false),
+                    TestsId_test = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionTest", x => new { x.QuestionsId_question, x.TestsId_test });
+                    table.ForeignKey(
+                        name: "FK_QuestionTest_Questions_QuestionsId_question",
+                        column: x => x.QuestionsId_question,
+                        principalTable: "Questions",
+                        principalColumn: "Id_question",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuestionTest_Tests_TestsId_test",
+                        column: x => x.TestsId_test,
                         principalTable: "Tests",
                         principalColumn: "Id_test",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -238,34 +308,34 @@ namespace TRACNGHIEMONLINE.Migrations
                 column: "PermissionId_permission");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ClassStudent_StudentsId_student",
+                table: "ClassStudent",
+                column: "StudentsId_student");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_SubjectId_subject",
                 table: "Questions",
                 column: "SubjectId_subject");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_TestId_test",
-                table: "Questions",
-                column: "TestId_test");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Scores_StudentId_student",
-                table: "Scores",
-                column: "StudentId_student");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Scores_TestId_test",
-                table: "Scores",
-                column: "TestId_test");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_ClassId_class",
-                table: "Students",
-                column: "ClassId_class");
+                name: "IX_QuestionTest_TestsId_test",
+                table: "QuestionTest",
+                column: "TestsId_test");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_permissionId_permission",
                 table: "Students",
                 column: "permissionId_permission");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubjectTypeExam_TypeExamsId",
+                table: "SubjectTypeExam",
+                column: "TypeExamsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_ScoreId_score",
+                table: "Tests",
+                column: "ScoreId_score");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tests_StatusId_status",
@@ -281,6 +351,11 @@ namespace TRACNGHIEMONLINE.Migrations
                 name: "IX_Tests_SubjectId_subject",
                 table: "Tests",
                 column: "SubjectId_subject");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tests_TypeId",
+                table: "Tests",
+                column: "TypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -289,13 +364,25 @@ namespace TRACNGHIEMONLINE.Migrations
                 name: "Admins");
 
             migrationBuilder.DropTable(
+                name: "ClassStudent");
+
+            migrationBuilder.DropTable(
+                name: "QuestionTest");
+
+            migrationBuilder.DropTable(
+                name: "SubjectTypeExam");
+
+            migrationBuilder.DropTable(
+                name: "Classes");
+
+            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
-                name: "Scores");
+                name: "Tests");
 
             migrationBuilder.DropTable(
-                name: "Tests");
+                name: "Scores");
 
             migrationBuilder.DropTable(
                 name: "Statuses");
@@ -307,7 +394,7 @@ namespace TRACNGHIEMONLINE.Migrations
                 name: "Subjects");
 
             migrationBuilder.DropTable(
-                name: "Classes");
+                name: "TypeExams");
 
             migrationBuilder.DropTable(
                 name: "Permissions");

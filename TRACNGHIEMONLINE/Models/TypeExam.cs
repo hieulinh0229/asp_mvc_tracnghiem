@@ -14,7 +14,7 @@ namespace TRACNGHIEMONLINE.Models
         }
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
-    public string Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
     public int Total_questions { get; set; }
     public int Time_to_do { get; set; }

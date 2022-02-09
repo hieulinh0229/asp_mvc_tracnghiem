@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using TRACNGHIEMONLINE.DAL;
@@ -8,32 +8,33 @@ using TRACNGHIEMONLINE.Models;
 
 namespace TRACNGHIEMONLINE.Repositories
 {
-    public class SubjectRepository : ISubjectRepository
+    public class TypeExamRepository : ITypeExamRepository
     {
         public readonly TracNghiemDbContext _context;
 
-        public SubjectRepository(TracNghiemDbContext context)
+        public TypeExamRepository(TracNghiemDbContext context)
         {
             this._context = context;
         }
+
         public void Delete(object id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Subject> GetAll()
+        public IEnumerable<TypeExam> GetAll()
         {
-            return _context.Subjects.Include(x=>x.TypeExams).AsQueryable();
+            return _context.TypeExams.Include(e=>e.Subjects).AsQueryable();
         }
 
-        public Subject GetById(object id)
+        public TypeExam GetById(object id)
         {
-            return _context.Subjects.Where(x => x.Id_subject.ToString().Equals(id.ToString())).FirstOrDefault();
+            return _context.TypeExams.Where(x=>x.Id.ToString().Equals(id.ToString())).FirstOrDefault();
         }
 
-        public void Insert(Subject obj)
+        public void Insert(TypeExam obj)
         {
-            _context.Add<Subject>(obj);
+            _context.Add<TypeExam>(obj);
             _context.SaveChanges();
         }
 
@@ -42,9 +43,11 @@ namespace TRACNGHIEMONLINE.Repositories
             throw new NotImplementedException();
         }
 
-        public void Update(Subject obj)
+        public void Update(TypeExam obj)
         {
             throw new NotImplementedException();
         }
-    }
+    } 
+
+    
 }

@@ -15,7 +15,6 @@ namespace TRACNGHIEMONLINE.DAL
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-         
         }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Permission> Permissions{  get; set;}
@@ -26,5 +25,6 @@ namespace TRACNGHIEMONLINE.DAL
         public DbSet<Student> Students{  get; set;}
         public DbSet<Subject> Subjects{  get; set;}
         public DbSet<Test> Tests{  get; set;}
+        public DbSet<TypeExam> TypeExams {  get; set;}
     }
 }

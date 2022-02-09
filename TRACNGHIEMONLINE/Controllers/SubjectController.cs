@@ -16,11 +16,13 @@ namespace TRACNGHIEMONLINE.Controllers
     {
         public readonly ISubjectRepository subjectRepository;
         public readonly IClassRepository classRepository;
+        public readonly ITypeExamRepository examRepository;
 
-        public SubjectController(ISubjectRepository subjectRepository, IClassRepository classRepository)
+        public SubjectController(ISubjectRepository subjectRepository, IClassRepository classRepository, ITypeExamRepository examRepository)
         {
             this.subjectRepository = subjectRepository;
             this.classRepository = classRepository;
+            this.examRepository = examRepository;
         }
         public IActionResult Index()
         {
@@ -28,10 +30,13 @@ namespace TRACNGHIEMONLINE.Controllers
             if (isLogin)
             {
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
-                var listSub = subjectRepository.GetAll().ToArray();
+                 var listSub = subjectRepository.GetAll().ToArray();
                 var classes = classRepository.GetAll().ToArray();
+                var types = examRepository.GetAll().ToArray();
                 ViewData["CLASS"] = classes;
                 ViewData["SUBS"] = listSub;
+             
+
                 return View(user);
             }
             else
@@ -63,30 +68,41 @@ namespace TRACNGHIEMONLINE.Controllers
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var user = HttpContext.Session.Get<User>(UserSession.USER);
-            if (ModelState.IsValid && isLogin && user.IsAdmin())
+            ViewData["USER"] = user;
+            if (  isLogin && user.IsAdmin())
             {
-                bool exitName = subjectRepository.GetAll()
-                    .Any(x => x.Subject_name.Equals(model.Subject_name));
-                // Check exit name subject
-                if (exitName)
+                if(ModelState.IsValid)
                 {
-                    ViewBag.error = "Đã tồn tại môn học cùng tên";
+                    bool exitName = subjectRepository.GetAll()
+                                    .Any(x => x.Subject_name.Equals(model.Subject_name));
+                    // Check exit name subject
+                    if (exitName)
+                    {
+                        ViewBag.error = "Đã tồn tại môn học cùng tên";
+                    }
+                    else
+                    {
+                        Subject subject = new Subject()
+                        {
+                            Subject_name = model.Subject_name,
+                            Description = model.Description
+                        };
+                        subjectRepository.Insert(subject);
+                    }
+                    return RedirectToAction("Index", "Subject");
                 }
                 else
                 {
-                    Subject subject = new Subject()
-                    {
-                        Subject_name = model.Subject_name,
-                        Description = model.Description
-                    };
-                    subjectRepository.Insert(subject);
+                    return View();
+
                 }
-                return RedirectToAction("Index","Subject");
             }
             else
             {
-                return Redirect("/subject/create");
+                return Redirect("/login");
             }
+
+
 
         }
         public IActionResult CreateTypeExam()
@@ -112,15 +128,30 @@ namespace TRACNGHIEMONLINE.Controllers
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var user = HttpContext.Session.Get<User>(UserSession.USER);
+            if(!(isLogin && user.IsAdmin()))
+            {
+                return Redirect("/login");
+            }
             if (ModelState.IsValid && isLogin && user.IsAdmin())
             {
-              
-              
+                int idSub = model.Id_sub;
+                var sub = subjectRepository.GetById(idSub);
+                List<Subject> subjects = new List<Subject>();
+                subjects.Add(sub);
+                var type = new TypeExam()
+                {
+                    Name = model.Name,
+                    Total_questions = model.Total_questions,
+                    Time_to_do = model.Time_to_do,
+                    Subjects = subjects
+                };
+                examRepository.Insert(type);
+
                 return RedirectToAction("Index", "Subject");
             }
             else
             {
-                return Redirect("/subject/create");
+                return View();
             }
 
         }

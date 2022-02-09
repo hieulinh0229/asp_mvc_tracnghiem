@@ -259,13 +259,16 @@
                                             <div class="col-md-12">
                                                 <input type="text" id="Name" name="Name" required
                                                        class="form-control form-control-line">
+                                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                           
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-12">Tổng số câu hỏi</label>
                                             <div class="col-md-12">
-                                                <input type="number" id="Total_questions" name="Total_questions" required
+                                                <input type="number" id="Total_questions" name="Total_questions" required 
                                                        class="form-control form-control-line">
+                                                @Html.ValidationMessageFor(model => model.Total_questions, "", new { @class = "text-danger" })
                                             </div>
                                         </div>  
                                         
@@ -274,6 +277,7 @@
                                             <div class="col-md-12">
                                                 <input type="number" id="Time_to_do" name="Time_to_do" required
                                                        class="form-control form-control-line">
+                                                @Html.ValidationMessageFor(model => model.Time_to_do, "", new { @class = "text-danger" })
                                             </div>
                                         </div>   
                                         
@@ -291,7 +295,7 @@
 
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button type="submit" class="btn btn-success text-white">Tạo mới</button>
+                                                <button type="submit"   class="btn btn-success text-white">Tạo mới</button>
                                             </div>
                                         </div>
                                     }

@@ -54,8 +54,8 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Property<int>("SubjectsId_subject")
                         .HasColumnType("int");
 
-                    b.Property<string>("TypeExamsId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TypeExamsId")
+                        .HasColumnType("int");
 
                     b.HasKey("SubjectsId_subject", "TypeExamsId");
 
@@ -328,8 +328,8 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Property<DateTime?>("Timestamps")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TypeId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id_test");
 
@@ -348,9 +348,10 @@ namespace TRACNGHIEMONLINE.Migrations
 
             modelBuilder.Entity("TRACNGHIEMONLINE.Models.TypeExam", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -363,7 +364,7 @@ namespace TRACNGHIEMONLINE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeExam");
+                    b.ToTable("TypeExams");
                 });
 
             modelBuilder.Entity("ClassStudent", b =>

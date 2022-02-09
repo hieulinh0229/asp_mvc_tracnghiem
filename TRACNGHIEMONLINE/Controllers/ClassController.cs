@@ -40,6 +40,7 @@ namespace TRACNGHIEMONLINE.Controllers
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var user = HttpContext.Session.Get<User>(UserSession.USER);
+            ViewData["USER"] = user;
             if (ModelState.IsValid && isLogin && user.IsAdmin())
             {
                 bool exitName = classRepository.GetAll()
@@ -62,7 +63,7 @@ namespace TRACNGHIEMONLINE.Controllers
             }
             else
             {
-                return Redirect("/subject/create");
+                return View();
             }
 
         }

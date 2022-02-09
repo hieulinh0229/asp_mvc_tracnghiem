@@ -38,6 +38,7 @@ namespace TRACNGHIEMONLINE
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IClassRepository, ClassRepository>();
+            services.AddScoped<ITypeExamRepository, TypeExamRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

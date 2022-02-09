@@ -276,19 +276,24 @@
                                 </h4>
                                 <div class=" m-t-10">
                                     <a href="/subject/create">
-                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới môn học</span>
-                                    </a>
-                                </div>  
-                                <div class=" m-t-10">
-                                    <a href="/subject/CreateTypeExam">
-                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới kỳ kiểm tra</span>
+                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm  môn học</span>
                                     </a>
                                 </div>
-                                <div class=" m-t-10">
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới bài kiểm tra</span>
-                                    </a>
-                                </div>
+
+                                @if (subjects.Length > 0)
+                                {
+                                    <div class=" m-t-10">
+                                        <a href="/subject/CreateTypeExam">
+                                            <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm  kỳ kiểm tra</span>
+                                        </a>
+                                    </div>
+                                    <div class=" m-t-10">
+                                        <a href="javascript:void(0)">
+                                            <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm câu hỏi</span>
+                                        </a>
+                                    </div>
+
+                                }
                                 <div class="table-responsive">
                                     @for (var i = 0; i < subjects.Length; i++)
                                     {
@@ -331,18 +336,18 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @for (var j = 0; j < typeXams.Length; i++)
+                                                        @for (var j = 0; j < typeXams.Length; j++)
                                                         {
                                                             var type = typeXams[j];
                                                             if (type != null)
                                                             {
                                                                 <tr>
-                                                                    <th scope="row">@j +1</th>
+                                                                    <th scope="row">@(j +1)</th>
 
                                                                     <td>@type.Name</td>
-                                                                    <td>@type.Subjects</td>
+                                                                    <td>@sub.Subject_name</td>
                                                                     <td>@type.Total_questions</td>
-                                                                    <td>@type.Time_to_do + "Phút"</td>
+                                                                    <td>@type.Time_to_do <a>Phut</a></td>
 
                                                                 </tr>
                                                             }
@@ -413,7 +418,7 @@
                                 </h4>
                                 <div class=" m-t-10">
                                     <a href="/class/create">
-                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm mới lớp học</span>
+                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm lớp học</span>
                                     </a>
                                 </div>
                                 <div class=" m-t-10">
