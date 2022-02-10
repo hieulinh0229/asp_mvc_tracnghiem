@@ -36,14 +36,14 @@ namespace TRACNGHIEMONLINE.Common
         public bool IsAdmin()
         {
           
-         if (ISLOGIN && PERMISSION_NAME.Equals(EnumPermission.ADMIN))
+         if (ISLOGIN && PERMISSION_NAME.Equals(EnumPermission.ADMIN.ToString()))
                     return true;
             return false;
 
         }
         public bool IsStudent()
         {
-          if (ISLOGIN && PERMISSION.Equals(EnumPermission.STUDENT))
+          if (ISLOGIN && PERMISSION.Equals(EnumPermission.STUDENT.ToString()))
                     return true;
                 return false;
         }

@@ -59,14 +59,14 @@ namespace TRACNGHIEMONLINE.Repositories.InitData
                         var listPer = new List<Permission>();
                         var defaultePerAdmin = new Permission
                         {
-                            Permission_name = EnumPermission.ADMIN,
+                            Permission_name = EnumPermission.ADMIN.ToString(),
                             Admins = admin,
                             Students = null
 
                         };    
                         var defaultePerStu = new Permission
                         {
-                            Permission_name = EnumPermission.STUDENT,
+                            Permission_name = EnumPermission.STUDENT.ToString(),
                             Admins = null,
                             Students = null
 

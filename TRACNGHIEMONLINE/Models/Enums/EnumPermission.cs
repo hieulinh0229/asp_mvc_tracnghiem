@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace TRACNGHIEMONLINE.Models
 {
-    public  class EnumPermission
+    public  enum EnumPermission
     {
-        public static String ADMIN = "ADMIN";
-        public static String STUDENT = "STUDENT";
+         ADMIN,
+        STUDENT
     }
 }

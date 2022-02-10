@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TRACNGHIEMONLINE.Common;
 using TRACNGHIEMONLINE.Models;
 using TRACNGHIEMONLINE.Models.DTO;
+using TRACNGHIEMONLINE.Models.Enums;
 using TRACNGHIEMONLINE.Repositories;
 
 namespace TRACNGHIEMONLINE.Controllers
@@ -110,7 +111,13 @@ namespace TRACNGHIEMONLINE.Controllers
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var user = HttpContext.Session.Get<User>(UserSession.USER);
             var listSub = subjectRepository.GetAll().ToArray();
+            Dictionary<int, string> listTypeExs = new Dictionary<int, string>();
+            listTypeExs.Add((int)EnumTypExam.BAITAPTULUYEN, EnumTypExam.BAITAPTULUYEN.ToString());
+            listTypeExs.Add((int)EnumTypExam.THIHOCKY, EnumTypExam.THIHOCKY.ToString());
+            listTypeExs.Add((int)EnumTypExam.KIEMTRAGIUAKY, EnumTypExam.KIEMTRAGIUAKY.ToString());
+
             ViewData["SUBS"] = listSub;
+            ViewData["TYPES"] = listTypeExs;
             if (isLogin && user.IsAdmin())
             {
                 ViewData["USER"] = user;
