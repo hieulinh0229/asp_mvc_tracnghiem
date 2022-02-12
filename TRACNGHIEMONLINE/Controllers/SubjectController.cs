@@ -58,6 +58,9 @@ namespace TRACNGHIEMONLINE.Controllers
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var user = HttpContext.Session.Get<User>(UserSession.USER);
+            var classes = classRepository.GetAll().ToArray();
+            var types = examRepository.GetAll().ToArray();
+            ViewData["CLASS"] = classes;
             if (isLogin && user.IsAdmin())
             {
                 ViewData["USER"] = user;
@@ -88,11 +91,14 @@ namespace TRACNGHIEMONLINE.Controllers
                         ViewBag.error = "Đã tồn tại môn học cùng tên";
                     }
                     else
+                  
                     {
+                        var listClass = classRepository.GetAll().Where(x => model.Id_Class.Contains(x.Id_class)).ToList();
                         Subject subject = new Subject()
                         {
                             Subject_name = model.Subject_name,
-                            Description = model.Description
+                            Description = model.Description,
+                            Classes = listClass
                         };
                         subjectRepository.Insert(subject);
                     }

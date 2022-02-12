@@ -1,10 +1,13 @@
-﻿@using TRACNGHIEMONLINE.Common
+﻿@using TRACNGHIEMONLINE.Models.Enums
 @model TRACNGHIEMONLINE.Common.User
 
 @{
-    ViewBag.Title = "Quản Lý Admin";
-    Layout = "";
     var admin = Model;
+    ViewBag.Title = admin.IsAdmin() ? "Quản Lý Môn Học" : "Môn học";
+    Layout = "";
+    Subject[] subjects = ViewData["SUBS"] as Subject[];
+    Class[] classes = ViewData["CLASS"] as Class[];
+
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -164,9 +167,9 @@
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="Userdd">
                                         <a class="dropdown-item" href="/admin/detail">
                                             <i class="ti-user m-r-5 m-l-5"></i> My Profile
-                                        </a> 
+                                        </a>
                                         <div class="dropdown-divider"></div>
-                              
+
                                         <a class="dropdown-item" href="/logout">
                                             <i class="fa fa-power-off m-r-5 m-l-5"></i> Logout
                                         </a>
@@ -176,16 +179,16 @@
                             <!-- End User Profile-->
                         </li>
                         <li class="p-15 m-t-10">
-                            <a href="/admin/StudentManagement"
+                            <a href="#"
                                class="btn d-block w-100 create-btn text-white no-block d-flex align-items-center">
-                                <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Quản lý sinh viên</span>
+                                <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Quản lý lớp học và môn học</span>
                             </a>
                         </li>
                         <!-- User Profile-->
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                               href="/subject" aria-expanded="false">
-                                <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Quản lý lớp học và môn học</span>
+                               href="/admin/StudentManagement" aria-expanded="false">
+                                <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Quản lý sinh viên</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -194,7 +197,7 @@
                                 <i class="mdi mdi-account-network"></i><span class="hide-menu">Cài đặt tài khoản</span>
                             </a>
                         </li>
-                
+
                     </ul>
 
                 </nav>
@@ -225,7 +228,7 @@
                             </nav>
                         </div>
                     </div>
-          
+
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -235,262 +238,219 @@
             <!-- Container fluid  -->
             <!-- ============================================================== -->
             <div class="container-fluid">
-
-
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
                 <div class="row">
-                    <!-- column -->
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <!-- title -->
-                                <div class="d-md-flex">
-                                    <div>
-                                        <h4 class="card-title">Danh sách sinh viên hoàn thành bài thi</h4>
-                                    </div>
-                                    <div class="ms-auto">
-                                    </div>
+                                <h4 class="card-title">
+                                    <i class="m-r-5 font-22 mdi mdi-numeric-1-box-multiple-outline"></i>
+                                    Danh sách môn học
+                                </h4>
+                                <div class=" m-t-10">
+                                    <a href="/subject/create">
+                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm  môn học</span>
+                                    </a>
                                 </div>
-                                <!-- title -->
+
+                                @if (subjects.Length > 0)
+                                {
+                                    <div class=" m-t-10">
+                                        <a href="/subject/CreateTypeExam">
+                                            <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm  kỳ kiểm tra</span>
+                                        </a>
+                                    </div>
+                                    <div class=" m-t-10">
+                                        <a href="/subject/CreateQuestion">
+                                            <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm câu hỏi</span>
+                                        </a>
+                                    </div>
+
+                                }
+                                <div class="table-responsive">
+                                    @for (var i = 0; i < subjects.Length; i++)
+                                    {
+                                        var sub = subjects[i];
+                                        var tests = sub == null ? null : sub.Tests.ToArray();
+                                        var typeXams = sub == null ? null : sub.TypeExams.ToArray();
+                                        var index = @i + 1;
+                                        <h6 class="card-title">
+                                            <a href="javascript:void(0)">
+                                                <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
+                                                @sub.Subject_name
+                                            </a>
+                                        </h6>
+
+                                        @if (typeXams == null || typeXams.Length == 0)
+                                        {
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    <span style="color:red">Không có kì kiểm tra </span>
+                                                </div>
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <h6 class="card-title">
+                                                <a>
+                                                    <i>- DS kì kiểm tra</i>
+                                                </a>
+                                            </h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Tên kì kiểm tra</th>
+                                                            <th scope="col">Môn học</th>
+                                                            <th scope="col">Tổng số câu hỏi</th>
+                                                            <th scope="col">Thời gian làm bài</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (var j = 0; j < typeXams.Length; j++)
+                                                        {
+                                                            var type = typeXams[j];
+                                                            if (type != null)
+                                                            {
+                                                                <tr>
+                                                                    <th scope="row">@(j +1)</th>
+                                                                    @if (type.Name.Equals(EnumTypExam.THIHOCKY.ToString()))
+                                                                    {
+
+                                                                        <td> Thi học kỳ</td>
+                                                                    }
+
+                                                                    @if (type.Name.Equals(EnumTypExam.BAITAPTULUYEN.ToString()))
+                                                                    {
+
+                                                                        <td>  Bài tập tư luyện</td>
+                                                                    }
+                                                                    @if (type.Name.Equals(EnumTypExam.KIEMTRAGIUAKY.ToString()))
+                                                                    {
+
+                                                                        <td>Kiểm tra giữa kỳ</td>
+                                                                    }
+                                                                    <td>@sub.Subject_name</td>
+                                                                    <td>@type.Total_questions</td>
+                                                                    <td>@type.Time_to_do <a>Phut</a></td>
+
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+                                        }
+                                        @if (tests == null || tests.Length == 0)
+                                        {
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    <span style="color:red">Không có bài kiểm tra </span>
+                                                </div>
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <h6 class="card-title">
+                                                <a>
+                                                    <i>- DS Bài kiểm tra</i>
+                                                </a>
+                                            </h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Tên bài kiểm tra</th>
+                                                            <th scope="col">Ghi chú</th>
+                                                            <th scope="col">Trạng thái</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @for (var j = 0; j < subjects.Length; i++)
+                                                        {
+                                                            var test = tests[j];
+                                                            if (test != null)
+                                                            {
+                                                                <tr>
+                                                                    <th scope="row">@j +1</th>
+
+                                                                    <td>@test.Test_name</td>
+                                                                    <td>@test.Note</td>
+                                                                    <td>@test.Status</td>
+
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+                                        }
+                                    }
+
+
+                                </div>
+                                <h4 class="card-title">
+                                    <i class="m-r-5 font-22 mdi mdi-numeric-2-box-multiple-outline"></i>
+                                    Danh sách lớp học
+                                </h4>
+                                <div class=" m-t-10">
+                                    <a href="/class/create">
+                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm lớp học</span>
+                                    </a>
+                                </div>
+                                <div class="table-responsive">
+                                    @for (var i = 0; i < classes.Length; i++)
+                                    {
+                                        var sub = classes[i];
+                                        var sts = sub == null ? null : sub.Students.ToArray();
+                                        var index = @i + 1;
+                                        <h6 class="card-title">
+                                            <a href="javascript:void(0)">
+                                                <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
+                                                @sub.Class_name
+                                            </a>
+                                        </h6>
+
+                                        @if (sts == null || sts.Length == 0)
+                                        {
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox">
+                                                    <span style="color:red">Không có sinh viên  </span>
+                                                </div>
+                                            </div>
+
+                                        }
+                                    }
+
+
+                                </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table v-middle">
-                                    <thead>
-                                        <tr class="bg-light">
-                                            <th class="border-top-0">Products</th>
-                                            <th class="border-top-0">License</th>
-                                            <th class="border-top-0">Support Agent</th>
-                                            <th class="border-top-0">Technology</th>
-                                            <th class="border-top-0">Tickets</th>
-                                            <th class="border-top-0">Sales</th>
-                                            <th class="border-top-0">Earnings</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-info text-white">EA</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Elite Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>John Doe</td>
-                                            <td>
-                                                <label class="label label-danger">Angular</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-orange text-white">MA</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Monster Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>Venessa Fern</td>
-                                            <td>
-                                                <label class="label label-info">Vue Js</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-success text-white">MP</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Material Pro Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>John Doe</td>
-                                            <td>
-                                                <label class="label label-success">Bootstrap</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-purple text-white">AA</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Ample Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>John Doe</td>
-                                            <td>
-                                                <label class="label label-purple">React</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
                         </div>
                     </div>
+
                 </div>
                 <!-- ============================================================== -->
-                <!-- Table -->
+                <!-- End PAge Content -->
                 <!-- ============================================================== -->
                 <!-- ============================================================== -->
-                <!-- Recent comment and chats -->
+                <!-- Right sidebar -->
                 <!-- ============================================================== -->
-                <div class="row">
-                    <!-- column -->
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <!-- title -->
-                                <div class="d-md-flex">
-                                    <div>
-                                        <h4 class="card-title">Danh sách sinh viên chưa hoàn thành</h4>
-                                    </div>
-                                    <div class="ms-auto">
-                                    </div>
-                                </div>
-                                <!-- title -->
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table v-middle">
-                                    <thead>
-                                        <tr class="bg-light">
-                                            <th class="border-top-0">Products</th>
-                                            <th class="border-top-0">License</th>
-                                            <th class="border-top-0">Support Agent</th>
-                                            <th class="border-top-0">Technology</th>
-                                            <th class="border-top-0">Tickets</th>
-                                            <th class="border-top-0">Sales</th>
-                                            <th class="border-top-0">Earnings</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-info text-white">EA</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Elite Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>John Doe</td>
-                                            <td>
-                                                <label class="label label-danger">Angular</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-orange text-white">MA</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Monster Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>Venessa Fern</td>
-                                            <td>
-                                                <label class="label label-info">Vue Js</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-success text-white">MP</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Material Pro Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>John Doe</td>
-                                            <td>
-                                                <label class="label label-success">Bootstrap</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="m-r-10">
-                                                        <a class="btn btn-circle d-flex btn-purple text-white">AA</a>
-                                                    </div>
-                                                    <div class="">
-                                                        <h4 class="m-b-0 font-16">Ample Admin</h4>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Single Use</td>
-                                            <td>John Doe</td>
-                                            <td>
-                                                <label class="label label-purple">React</label>
-                                            </td>
-                                            <td>46</td>
-                                            <td>356</td>
-                                            <td>
-                                                <h5 class="m-b-0">$2850.06</h5>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- .right-sidebar -->
                 <!-- ============================================================== -->
-                <!-- Recent comment and chats -->
+                <!-- End Right sidebar -->
                 <!-- ============================================================== -->
             </div>
             <!-- ============================================================== -->

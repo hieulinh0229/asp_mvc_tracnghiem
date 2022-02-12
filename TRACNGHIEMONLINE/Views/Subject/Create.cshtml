@@ -7,6 +7,7 @@
     ViewBag.Title = "Thêm mới môn học";
     Layout = "";
     User admin = ViewData["USER"] as User;
+    Class[] classes = ViewData["CLASS"] as Class[];
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -256,10 +257,21 @@
                                         <div class="form-group">
                                             <label class="col-md-12">Tên môn học</label>
                                             <div class="col-md-12">
-                                                <input type="text" id="Subject_name" name="Subject_name" required 
+                                                <input type="text" id="Subject_name" name="Subject_name" required
                                                        class="form-control form-control-line">
                                                 @Html.ValidationMessageFor(model => model.Subject_name, "", new { @class = "text-danger" })
 
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Tên lớp</label>
+                                            <div class="col-md-12">
+                                                <select class="form-control" id="Id_Class" name="Id_Class" multiple required>
+                                                    @foreach (var cls in classes)
+                                                    {
+                                                        <option value="@cls.Id_class">@cls.Class_name</option>
+                                                    }
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">

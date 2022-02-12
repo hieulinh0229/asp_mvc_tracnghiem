@@ -436,12 +436,6 @@
                                         <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm lớp học</span>
                                     </a>
                                 </div>
-                                <div class=" m-t-10">
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm sinh viên</span>
-                                    </a>
-                                </div>
-
                                 <div class="table-responsive">
                                     @for (var i = 0; i < classes.Length; i++)
                                     {
@@ -463,50 +457,6 @@
                                                 </div>
                                             </div>
 
-                                        }
-                                        else
-                                        {
-                                            <h6 class="card-title">
-                                                <a>
-                                                    <i>- DS Sinh viên</i>
-                                                </a>
-                                            </h6>
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">#</th>
-                                                            <th scope="col">Tên </th>
-                                                            <th scope="col">Email</th>
-                                                            <th scope="col">Địa chỉ</th>
-                                                            <th scope="col">Giới tính</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @for (var j = 0; j < sts.Length; i++)
-                                                        {
-                                                            var st = sts[j];
-                                                            if (st != null)
-                                                            {
-                                                                <tr>
-                                                                    <th scope="row">@j +1</th>
-
-                                                                    <td>@st.Name</td>
-
-                                                                    <td>@st.Email</td>
-
-                                                                    <td>@st.Address</td>
-                                                                    <td>@st.Gender</td>
-
-                                                                </tr>
-                                                            }
-
-                                                        }
-                                                    </tbody>
-
-                                                </table>
-
-                                            </div>
                                         }
                                     }
 

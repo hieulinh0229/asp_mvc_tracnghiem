@@ -13,9 +13,11 @@ namespace TRACNGHIEMONLINE.Controllers
     public class LoginController : Controller
     {
         public readonly IAdminRepository adminRepository;
-        public LoginController(IAdminRepository _adminRepository)
+        public readonly IStudentRepository studentRepository;
+        public LoginController(IAdminRepository _adminRepository, IStudentRepository studentRepository)
         {
             this.adminRepository = _adminRepository;
+            this.studentRepository = studentRepository;
         }
    
         public ActionResult Index()
@@ -31,7 +33,7 @@ namespace TRACNGHIEMONLINE.Controllers
             {
 
                 var listAdmin = adminRepository.GetAll().ToList();
-                var listSudent = new List<Student>();
+                var listSudent = studentRepository.GetAll().ToList();
                 var user = model.CheckLogin(model, listAdmin, listSudent);
                  if (user==null)
                 {
@@ -50,7 +52,7 @@ namespace TRACNGHIEMONLINE.Controllers
                     }
                     if (user.IsStudent())
                     {  
-                        return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", "Students");
                     }      
                 }
                            

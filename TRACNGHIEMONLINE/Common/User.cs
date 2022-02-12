@@ -43,7 +43,7 @@ namespace TRACNGHIEMONLINE.Common
         }
         public bool IsStudent()
         {
-          if (ISLOGIN && PERMISSION.Equals(EnumPermission.STUDENT.ToString()))
+          if (ISLOGIN && PERMISSION_NAME.Equals(EnumPermission.STUDENT.ToString()))
                     return true;
                 return false;
         }

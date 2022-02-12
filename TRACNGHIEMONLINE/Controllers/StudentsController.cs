@@ -15,17 +15,48 @@ namespace TRACNGHIEMONLINE.Controllers
     {
         public readonly IClassRepository classRepository;
         public readonly IStudentRepository studentRepository;
+        public readonly IAdminRepository adminRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public StudentsController( IWebHostEnvironment hostEnvironment, IClassRepository classRepository, IStudentRepository studentRepository)
+        public readonly ISubjectRepository subjectRepository;
+        public readonly IQuestionRepository questionRepository;
+        public readonly ITypeExamRepository examRepository;
+        public StudentsController(IAdminRepository _adminRepository,
+            IWebHostEnvironment hostEnvironment
+            , IClassRepository classRepository,
+            ISubjectRepository subjectRepository,
+             ITypeExamRepository examRepository,
+             IStudentRepository studentRepository,
+             IQuestionRepository questionRepository)
         {
-          
+            this.adminRepository = _adminRepository;
             this.webHostEnvironment = hostEnvironment;
             this.classRepository = classRepository;
+            this.subjectRepository = subjectRepository;
+            this.examRepository = examRepository;
             this.studentRepository = studentRepository;
+            this.questionRepository = questionRepository;
         }
         public IActionResult Index()
         {
-            return View();
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            if (isLogin)
+            {
+                var user = HttpContext.Session.Get<User>(UserSession.USER);
+                var listSub = subjectRepository.GetAll().ToArray();
+                var classes = classRepository.GetAll().ToArray();
+                var types = examRepository.GetAll().ToArray();
+                ViewData["CLASS"] = classes;
+                ViewData["SUBS"] = listSub;
+
+
+                return View(user);
+            }
+            else
+            {
+                return Redirect("/login");
+                // return View("Views/Admin/Admin.cshtml");
+            }
+          
         } 
         
         public IActionResult Create()
@@ -65,6 +96,7 @@ namespace TRACNGHIEMONLINE.Controllers
                                 Birthday = models.BIRTHDAY,
                                 Address = models.ADDRESS,
                                 Email = models.EMAIL,
+                                Gender = models.GENDER,
                                 Class = clas
                             };
                             studentRepository.Insert(student);

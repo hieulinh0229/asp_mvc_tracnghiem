@@ -16,26 +16,42 @@ namespace TRACNGHIEMONLINE.Controllers
         public readonly IAdminRepository adminRepository;
         public readonly IClassRepository classRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public AdminController(IAdminRepository _adminRepository, IWebHostEnvironment hostEnvironment, IClassRepository classRepository)
+        public readonly ISubjectRepository subjectRepository;
+        public readonly IQuestionRepository questionRepository;
+        public readonly ITypeExamRepository examRepository;
+        public AdminController(IAdminRepository _adminRepository,
+            IWebHostEnvironment hostEnvironment
+            , IClassRepository classRepository,
+            ISubjectRepository subjectRepository,
+             ITypeExamRepository examRepository)
         {
             this.adminRepository = _adminRepository;
             this.webHostEnvironment = hostEnvironment;
             this.classRepository = classRepository;
+            this.subjectRepository = subjectRepository;
+            this.examRepository = examRepository;
         }
         public IActionResult Index()
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
-            var user = HttpContext.Session.Get<User>(UserSession.USER);
-            if (isLogin && user.IsAdmin())
+            if (isLogin)
             {
+                var user = HttpContext.Session.Get<User>(UserSession.USER);
+                var listSub = subjectRepository.GetAll().ToArray();
+                var classes = classRepository.GetAll().ToArray();
+                var types = examRepository.GetAll().ToArray();
+                ViewData["CLASS"] = classes;
+                ViewData["SUBS"] = listSub;
+
+
                 return View(user);
             }
             else
             {
-                return Redirect("login");
+                return Redirect("/login");
                 // return View("Views/Admin/Admin.cshtml");
             }
-         }
+        }
         public IActionResult Detail()
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
@@ -51,15 +67,37 @@ namespace TRACNGHIEMONLINE.Controllers
             }
         }      
         
+        
+        public IActionResult SubjectManagement()
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            if (isLogin)
+            {
+                var user = HttpContext.Session.Get<User>(UserSession.USER);
+                var listSub = subjectRepository.GetAll().ToArray();
+                var classes = classRepository.GetAll().ToArray();
+                var types = examRepository.GetAll().ToArray();
+                ViewData["CLASS"] = classes;
+                ViewData["SUBS"] = listSub;
+
+
+                return View(user);
+            }
+            else
+            {
+                return Redirect("/login");
+                // return View("Views/Admin/Admin.cshtml");
+            }
+        } 
         public IActionResult StudentManagement()
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
-            Class[] listClass = classRepository.GetAll().ToArray();
             if (isLogin)
             {
-                var admin = HttpContext.Session.Get<User>(UserSession.USER);
-                ViewData["CLASS"] = listClass;
-                return View(admin);
+                var user = HttpContext.Session.Get<User>(UserSession.USER);
+                var classes = classRepository.GetAll().ToArray();
+                ViewData["CLASS"] = classes;
+                return View(user);
             }
             else
             {

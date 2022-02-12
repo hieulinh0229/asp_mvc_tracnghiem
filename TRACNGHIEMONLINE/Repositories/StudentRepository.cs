@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public IEnumerable<Student> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Students.Include(e => e.permission).AsQueryable();
         }
 
         public Student GetById(object id)

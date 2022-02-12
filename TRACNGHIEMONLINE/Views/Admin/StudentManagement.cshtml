@@ -307,20 +307,24 @@
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">#</th>
-                                                            <th scope="col">First</th>
-                                                            <th scope="col">Last</th>
-                                                            <th scope="col">Handle</th>
+                                                            <th scope="col">Tên</th>
+                                                            <th scope="col">Email</th>
+                                                            <th scope="col">Địa chỉ</th>
+                                                            <th scope="col">Giới tính</th>
+                                                            <th scope="col">Phone</th>
                                                         </tr>
                                                     </thead>
-                                                    @for (var j = 1; j < sts.Length; j++)
+                                                    @for (var j = 1; j <= sts.Length; j++)
                                                     {
-
+                                                        var st = sts[j - 1];
                                                         <tbody>
                                                             <tr>
-                                                                <th scope="row">1</th>
-                                                                <td>Mark</td>
-                                                                <td>Otto</td>
-                                                                <td>mdo</td>
+                                                                <th scope="row">@j</th>
+                                                                <td>@st.Name</td>
+                                                                <td>@st.Email</td>
+                                                                <td>@st.Address</td>
+                                                                <td>@st.Gender</td>
+                                                                <td>@st.Phone</td>
                                                             </tr>
 
                                                         </tbody>

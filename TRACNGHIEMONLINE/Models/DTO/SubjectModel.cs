@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 namespace TRACNGHIEMONLINE.Models.DTO
 {
     public class SubjectModel
@@ -10,6 +11,8 @@ namespace TRACNGHIEMONLINE.Models.DTO
         [Required(ErrorMessage = "Please enter Description")]
         [MinLength(5, ErrorMessage = "Độ dài mô tả phải ít nhất 5 kí tự")]
         public string Description { get; set; }
+        [Required(ErrorMessage = "Please selected  class")]
+        public List<int> Id_Class { get; set; }
 
     }
 
