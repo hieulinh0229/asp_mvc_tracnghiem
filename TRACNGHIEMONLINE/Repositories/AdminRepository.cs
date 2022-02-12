@@ -23,13 +23,13 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public IEnumerable<Admin> GetAll()
         {
-            var ss = _context.Permissions.Include(e => e.Admins).AsQueryable().ToList();
+           
             return _context.Admins.Include(e => e.Permission).AsQueryable();
         }
 
         public Admin GetById(object id)
         {
-            var ss = _context.Permissions.Include(e => e.Admins).AsQueryable().ToList();
+          
             return _context.Admins.Include(e => e.Permission).Where(x=>x.Id_admin.ToString().Equals(id.ToString())).FirstOrDefault();
           
         }

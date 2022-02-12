@@ -1,15 +1,12 @@
-﻿
-@using TRACNGHIEMONLINE.Models
-@using TRACNGHIEMONLINE.Common
-@using TRACNGHIEMONLINE.Models.Enums
-@model TRACNGHIEMONLINE.Models.DTO.TypeExamModel
+﻿@using TRACNGHIEMONLINE.Models.Enums
+@model TRACNGHIEMONLINE.Common.User
 
 @{
-    ViewBag.Title = "Thêm mới kì kiêm tra";
+    var user = Model;
+    ViewBag.Title = user.IsAdmin() ? "Quản Lý Môn Học" : "Môn học";
     Layout = "";
-    User admin = ViewData["USER"] as User;
-    Subject[] subjects = ViewData["SUBS"] as Subject[];
-    Dictionary<int, string> listTypeExs = ViewData["TYPES"] as Dictionary<int, string>;
+    Class[] classes = ViewData["CLASS"] as Class[];
+
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -19,14 +16,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        @ViewBag.Title
-    </title>
+    <meta name="keywords"
+          content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, Xtreme lite admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, Xtreme admin lite design, Xtreme admin lite dashboard bootstrap 5 dashboard template">
+    <meta name="description"
+          content="Xtreme Admin Lite is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Xtreme Admin Lite Template by WrapPixel</title>
     <link rel="canonical" href="https://www.wrappixel.com/templates/xtreme-admin-lite/" />
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
     <!-- Custom CSS -->
-    <link href="~/dist/css/style.min.css" rel="stylesheet">
+    <link href="../../dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -59,22 +59,22 @@
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="/home">
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="~/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <img src="../../assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
                             <!-- Light Logo icon -->
-                            <img src="~/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                            <img src="../../assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
                         <span class="logo-text">
                             <!-- dark Logo text -->
-                            <img src="~/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                            <img src="../../assets/images/logo-text.png" alt="homepage" class="dark-logo" />
                             <!-- Light Logo text -->
-                            <img src="~/assets/images/logo-light-text.png" class="light-logo" alt="homepage" />
+                            <img src="../../assets/images/logo-light-text.png" class="light-logo" alt="homepage" />
                         </span>
                     </a>
                     <!-- ============================================================== -->
@@ -109,7 +109,7 @@
                         <!-- ============================================================== -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="~/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="31">
+                                <img src="../../assets/images/users/1.jpg" alt="user" class="rounded-circle" width="31">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/admin/detail">
@@ -149,8 +149,9 @@
                         <li>
                             <!-- User Profile-->
                             <div class="user-profile d-flex no-block dropdown m-t-20">
+
                                 <div class="user-pic">
-                                    @if (@admin.AVATAR == null)
+                                    @if (user.AVATAR == null)
                                     {
 
                                         <img src="~/assets/images/users/1.jpg" alt="users"
@@ -159,24 +160,32 @@
                                     }
                                     else
                                     {
-                                        <img src="~/Uploads/@admin.AVATAR" alt="users"
+                                        <img src="~/Uploads/@user.AVATAR" alt="users"
                                              class="rounded-circle" width="40" />
                                     }
                                 </div>
+
                                 <div class="user-content hide-menu m-l-10">
                                     <a href="#" class="" id="Userdd" role="button"
                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <h5 class="m-b-0 user-name font-medium">
-                                            @admin.NAME
-                                            <i class="fa fa-angle-down"></i>
+                                            @user.NAME <i class="fa fa-angle-down"></i>
                                         </h5>
-                                        <span class="op-5 user-email">@admin.EMAIL</span>
+                                        <span class="op-5 user-email">@user.EMAIL</span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="Userdd">
-                                        <a class="dropdown-item" href="/admin/detail">
-                                            <i class="ti-user m-r-5 m-l-5"></i> My Profile
-                                        </a>
-
+                                        @if (user.IsAdmin())
+                                        {
+                                            <a class="dropdown-item" href="/admin/detail">
+                                                <i class="ti-user m-r-5 m-l-5"></i> My Profile
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="dropdown-item" href="/students/detail">
+                                                <i class="ti-user m-r-5 m-l-5"></i> My Profile
+                                            </a>
+                                        }
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="/logout">
                                             <i class="fa fa-power-off m-r-5 m-l-5"></i> Logout
@@ -188,13 +197,36 @@
                         </li>
 
                         <!-- User Profile-->
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                               href="/admin" aria-expanded="false">
-                                <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span>
-                            </a>
-                        </li>
-
+                        @if (user.IsAdmin())
+                        {
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                   href="/admin" aria-expanded="false">
+                                    <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                   href="/admin/detail" aria-expanded="false">
+                                    <i class="mdi mdi-account-network"></i><span class="hide-menu">Profile</span>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                   href="/students" aria-expanded="false">
+                                    <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                   href="/students/detail" aria-expanded="false">
+                                    <i class="mdi mdi-account-network"></i><span class="hide-menu">Profile</span>
+                                </a>
+                            </li>
+                        }
                     </ul>
 
                 </nav>
@@ -215,20 +247,17 @@
             <div class="page-breadcrumb">
                 <div class="row align-items-center">
                     <div class="col-5">
-                        <h4 class="page-title">Create Page</h4>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Create</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Detail</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
-
                 </div>
             </div>
-          
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -239,80 +268,89 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <!-- Row -->
                 <div class="row">
-                    <div class="col-lg-4 col-xlg-3 col-md-5">
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="form-horizontal form-material mx-2">
-                                    @using (Html.BeginForm("CreateTypeExam", "Subject", FormMethod.Post))
-                                    {
-
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            <label class="col-md-12">Tên kì kiêm tra</label>
-                                            <div class="col-md-12">
-                                                <select class="form-control" id="Name" name="Name">
-                                                    <option value="@EnumTypExam.BAITAPTULUYEN.ToString()"> Bài tập tự luyện</option>
-                                                    <option value="@EnumTypExam.THIHOCKY.ToString()"> Thi học kỳ </option>
-                                                    <option value="@EnumTypExam.KIEMTRAGIUAKY.ToString()">Kiểm tra giữa kỳ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        @if (ViewBag.error != null)
-                                        {
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    <span style="color:red">@ViewBag.error</span>
-                                                </div>
-                                            </div>
-
-                                        }
-
+                                <h4 class="card-title">
+                                    <i class=""></i> Danh sách sinh viên theo lớp
+                                </h4>
+                                @if (classes.Length > 0)
+                                {
+                                    <div class=" m-t-10">
+                                        <a href="/students/Create">
+                                            <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm sinh viên</span>
+                                        </a>
                                     </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">Tổng số câu hỏi</label>
-                                            <div class="col-md-12">
-                                                <input type="number" id="Total_questions" name="Total_questions" required 
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Total_questions, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>  
-                                        
-                                        <div class="form-group">
-                                            <label class="col-md-12">Thời gian làm bài (Tính bằng phút)</label>
-                                            <div class="col-md-12">
-                                                <input type="number" id="Time_to_do" name="Time_to_do" required
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Time_to_do, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>   
-                                        
-                                        <div class="form-group">
-                                            <label class="col-md-12">Môn học</label>
-                                            <div class="col-md-12">
-                                                <select class="form-control" id="Id_sub" name="Id_sub">
-                                                    @foreach (var item in subjects)
-                                                    {
-                                                        <option value="@item.Id_subject">@item.Subject_name</option>
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
+                                    <div class="table-responsive">
+                                        @for (var i = 0; i < classes.Length; i++)
+                                        {
+                                            var classe = classes[i];
+                                            var sts = classe == null ? null : classe.Students.ToArray();
+                                            var index = @i + 1;
 
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <button type="submit"   class="btn btn-success text-white">Tạo mới</button>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
+                                            <h6 class="card-title">
+                                                <a>
+                                                    <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
+                                                    @classe.Class_name
+                                                </a>
+                                            </h6>
+                                            @if (sts == null || sts.Length == 0)
+                                            {
+                                                <h6 class="card-title">
+                                                    <span style="color:red">Không có sinh viên  </span>
+                                                </h6>
+                                            }
+                                            else
+                                            {
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">First</th>
+                                                            <th scope="col">Last</th>
+                                                            <th scope="col">Handle</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @for (var j = 1; j < sts.Length; j++)
+                                                    {
+
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row">1</th>
+                                                                <td>Mark</td>
+                                                                <td>Otto</td>
+                                                                <td>mdo</td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    }
+                                                </table>
+
+                                            }
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class=" m-t-10">
+                                        <h6 class="card-title">
+                                            <span style="color:red">Không có lớp học </span>
+                                        </h6>
+                                    </div>
+                                    <div class=" m-t-10">
+                                        <a href="/class/create">
+                                            <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm lớp học</span>
+                                        </a>
+                                    </div>
+                                }
+
                             </div>
+
                         </div>
                     </div>
-                    <!-- Column -->
+
                 </div>
-                <!-- Row -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -331,7 +369,7 @@
             <!-- footer -->
             <!-- ============================================================== -->
             <footer class="footer text-center">
-                All Rights Reserved by <a>TRACNGHIEMONLINE</a>.
+                All Rights Reserved by  <a>TRACNGHIEMONLINE</a>.
             </footer>
             <!-- ============================================================== -->
             <!-- End footer -->
@@ -347,16 +385,16 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/dist/js/app-style-switcher.js"></script>
+    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../dist/js/app-style-switcher.js"></script>
     <!--Wave Effects -->
-    <script src="~/dist/js/waves.js"></script>
+    <script src="../../dist/js/waves.js"></script>
     <!--Menu sidebar -->
-    <script src="~/dist/js/sidebarmenu.js"></script>
+    <script src="../../dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
-    <script src="~/dist/js/custom.js"></script>
+    <script src="../../dist/js/custom.js"></script>
 </body>
 
 </html>

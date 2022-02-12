@@ -1,15 +1,12 @@
 ﻿
-@using TRACNGHIEMONLINE.Models
 @using TRACNGHIEMONLINE.Common
-@using TRACNGHIEMONLINE.Models.Enums
-@model TRACNGHIEMONLINE.Models.DTO.TypeExamModel
+@model TRACNGHIEMONLINE.Common.User
 
 @{
-    ViewBag.Title = "Thêm mới kì kiêm tra";
+    ViewBag.Title = "Quản Lý Admin";
     Layout = "";
-    User admin = ViewData["USER"] as User;
-    Subject[] subjects = ViewData["SUBS"] as Subject[];
-    Dictionary<int, string> listTypeExs = ViewData["TYPES"] as Dictionary<int, string>;
+    User admin = ViewData["ADMIN"] as User;
+    Class[] classes = ViewData["CLASS"] as Class[];
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -215,12 +212,12 @@
             <div class="page-breadcrumb">
                 <div class="row align-items-center">
                     <div class="col-5">
-                        <h4 class="page-title">Create Page</h4>
+                        <h4 class="page-title">Profile Page</h4>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Create</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Detail</li>
                                 </ol>
                             </nav>
                         </div>
@@ -228,7 +225,15 @@
 
                 </div>
             </div>
-          
+            @if (ViewBag.error != null)
+            {
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <span style="color:red">@ViewBag.error</span>
+                    </div>
+                </div>
+
+            }
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -241,68 +246,143 @@
                 <!-- ============================================================== -->
                 <!-- Row -->
                 <div class="row">
+                    <!-- Column -->
                     <div class="col-lg-4 col-xlg-3 col-md-5">
                         <div class="card">
                             <div class="card-body">
+                                <center class="m-t-30">
+                                    @if (@admin.AVATAR == null)
+                                    {
+                                        <img src="~/assets/images/users/5.jpg"
+                                             class="rounded-circle" width="150" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Uploads/@admin.AVATAR"
+                                             class="rounded-circle" width="150" />
+
+                                    }
+                                    <h4 class="card-title m-t-10">@admin.NAME</h4>
+                                    <h6 class="card-subtitle">Trắc nghiệm online</h6>
+                                    <div class="row text-center justify-content-md-center">
+                                    </div>
+                                </center>
+                            </div>
+                            <div>
+                                <hr>
+                            </div>
+                            <div class="card-body">
+                                <small class="text-muted">Email address </small>
+                                <h6>@admin.EMAIL</h6> <small class="text-muted p-t-30 db">Phone</small>
+                                <h6>@admin.PHONE</h6> <small class="text-muted p-t-30 db">Address</small>
+                                <h6>@admin.ADDRESS</h6>
+                                <div class="map-box">
+
+                                </div> <small class="text-muted p-t-30 db">Social Profile</small>
+                                <br />
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button>
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-lg-8 col-xlg-9 col-md-7">
+                        <div class="card">
+                            <div class="card-body">
                                 <div class="form-horizontal form-material mx-2">
-                                    @using (Html.BeginForm("CreateTypeExam", "Subject", FormMethod.Post))
+                                    @using (Html.BeginForm("EditAdmin", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
                                     {
 
-                                    <div class="form-group">
+                                        <input type="hidden" id="ID" name="ID"
+                                               class="form-control form-control-line" required value="@admin.ID">
+                                        <input type="hidden" id="USERNAME" name="USERNAME"
+                                               class="form-control form-control-line" required value="@admin.USERNAME">
+                                        <input type="hidden" id="PICTURE" name="PICTURE"
+                                               class="form-control form-control-line" required value="@admin.PICTURE">
+                                        <input type="hidden" id="PERMISSION" name="PERMISSION"
+                                               class="form-control form-control-line" required value="@admin.PERMISSION">
+                                        <input type="hidden" id="PERMISSION_NAME" name="PERMISSION_NAME"
+                                               class="form-control form-control-line" required value="@admin.PERMISSION_NAME">
+
+                                        <input type="hidden" id="ISLOGIN" name="ISLOGIN"
+                                               class="form-control form-control-line" required value="@admin.ISLOGIN">
+
+
                                         <div class="form-group">
-                                            <label class="col-md-12">Tên kì kiêm tra</label>
+                                            <label class="col-md-12">Name</label>
                                             <div class="col-md-12">
-                                                <select class="form-control" id="Name" name="Name">
-                                                    <option value="@EnumTypExam.BAITAPTULUYEN.ToString()"> Bài tập tự luyện</option>
-                                                    <option value="@EnumTypExam.THIHOCKY.ToString()"> Thi học kỳ </option>
-                                                    <option value="@EnumTypExam.KIEMTRAGIUAKY.ToString()">Kiểm tra giữa kỳ</option>
-                                                </select>
+
+                                                <input type="text" id="NAME" name="NAME" placeholder="@admin.NAME" required value="@admin.NAME"
+                                                       class="form-control form-control-line">
                                             </div>
                                         </div>
-                                        @if (ViewBag.error != null)
-                                        {
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    <span style="color:red">@ViewBag.error</span>
-                                                </div>
-                                            </div>
-
-                                        }
-
-                                    </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">Tổng số câu hỏi</label>
+                                            <label for="example-email" class="col-md-12">Email</label>
                                             <div class="col-md-12">
-                                                <input type="number" id="Total_questions" name="Total_questions" required 
+                                                <input type="email" value="@admin.EMAIL"
+                                                       class="form-control form-control-line" name="EMAIL"
+                                                       id="EMAIL">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Password</label>
+                                            <div class="col-md-12">
+                                                <input type="password" id="PASSWORD" name="PASSWORD"
                                                        class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Total_questions, "", new { @class = "text-danger" })
                                             </div>
-                                        </div>  
-                                        
+                                        </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">Thời gian làm bài (Tính bằng phút)</label>
+                                            <label class="col-md-12">Phone No</label>
                                             <div class="col-md-12">
-                                                <input type="number" id="Time_to_do" name="Time_to_do" required
+                                                <input type="text" value="@admin.PHONE" id="PHONE" name="PHONE"
                                                        class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Time_to_do, "", new { @class = "text-danger" })
                                             </div>
-                                        </div>   
-                                        
+                                        </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">Môn học</label>
+                                            <label class="col-md-12">Address</label>
                                             <div class="col-md-12">
-                                                <select class="form-control" id="Id_sub" name="Id_sub">
-                                                    @foreach (var item in subjects)
+                                                <input type="text" value="@admin.ADDRESS" id="ADDRESS" name="ADDRESS"
+                                                       class="form-control form-control-line" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-12">Birthday</label>
+                                            <div class="col-md-12">
+                                                <input type="date" name="BIRTHDAY" id="BIRTHDAY" class="form-control form-control-line" required value=@admin.BIRTHDAY.ToString("yyyy-MM-dd")>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Gender</label>
+                                            <div class="col-sm-12">
+                                                <select class="form-select shadow-none form-control-line" id="GENDER" name="GENDER">
+                                                    @if (@admin.GENDER == "Nam")
                                                     {
-                                                        <option value="@item.Id_subject">@item.Subject_name</option>
+                                                        <option value="Nam" selected>Nam</option>
+                                                        <option value="Nữ">Nữ</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Nam">Nam</option>
+                                                        <option value="Nữ" selected>Nữ</option>
                                                     }
                                                 </select>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="col-md-12">Upload avatar</label>
+                                            <div class="col-md-12">
+                                                @Html.TextBoxFor(model => model.PICTURE, new { type = "file", accept = "image/png, image/jpeg, image/gif" })
+                                                @Html.ValidationMessageFor(model => model.PICTURE)
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button type="submit"   class="btn btn-success text-white">Tạo mới</button>
+                                                <button type="submit" class="btn btn-success text-white">Update Profile</button>
                                             </div>
                                         </div>
                                     }

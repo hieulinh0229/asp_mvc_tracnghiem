@@ -32,7 +32,13 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public void Insert(Student obj)
         {
-            throw new NotImplementedException();
+            var per = _context.Permissions.Where(x => x.Permission_name.Equals(EnumPermission.STUDENT.ToString())).FirstOrDefault();
+            if(per!=null)
+            {
+                obj.permission = per;
+            }
+            _context.Add<Student>(obj);
+            _context.SaveChanges();
         }
 
         public void Save()

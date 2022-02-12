@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TRACNGHIEMONLINE.Common;
@@ -16,14 +18,18 @@ namespace TRACNGHIEMONLINE.Controllers
 
     {
         public readonly ISubjectRepository subjectRepository;
+        public readonly IQuestionRepository questionRepository;
         public readonly IClassRepository classRepository;
         public readonly ITypeExamRepository examRepository;
-
-        public SubjectController(ISubjectRepository subjectRepository, IClassRepository classRepository, ITypeExamRepository examRepository)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        public SubjectController(ISubjectRepository subjectRepository, IClassRepository classRepository, ITypeExamRepository examRepository, 
+            IWebHostEnvironment webHostEnvironment, IQuestionRepository questionRepository)
         {
             this.subjectRepository = subjectRepository;
             this.classRepository = classRepository;
             this.examRepository = examRepository;
+            this.webHostEnvironment = webHostEnvironment;
+            this.questionRepository = questionRepository;
         }
         public IActionResult Index()
         {
@@ -135,7 +141,15 @@ namespace TRACNGHIEMONLINE.Controllers
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var user = HttpContext.Session.Get<User>(UserSession.USER);
-            if(!(isLogin && user.IsAdmin()))
+            var listSub = subjectRepository.GetAll().ToArray();
+            Dictionary<int, string> listTypeExs = new Dictionary<int, string>();
+            listTypeExs.Add((int)EnumTypExam.BAITAPTULUYEN, EnumTypExam.BAITAPTULUYEN.ToString());
+            listTypeExs.Add((int)EnumTypExam.THIHOCKY, EnumTypExam.THIHOCKY.ToString());
+            listTypeExs.Add((int)EnumTypExam.KIEMTRAGIUAKY, EnumTypExam.KIEMTRAGIUAKY.ToString());
+            ViewData["USER"] = user;
+            ViewData["SUBS"] = listSub;
+            ViewData["TYPES"] = listTypeExs;
+            if (!(isLogin && user.IsAdmin()))
             {
                 return Redirect("/login");
             }
@@ -144,23 +158,109 @@ namespace TRACNGHIEMONLINE.Controllers
                 int idSub = model.Id_sub;
                 var sub = subjectRepository.GetById(idSub);
                 List<Subject> subjects = new List<Subject>();
-                subjects.Add(sub);
-                var type = new TypeExam()
+                var checkExits = sub.TypeExams.Any(x => x.Name.Equals(model.Name));
+                if(checkExits)
                 {
-                    Name = model.Name,
-                    Total_questions = model.Total_questions,
-                    Time_to_do = model.Time_to_do,
-                    Subjects = subjects
-                };
-                examRepository.Insert(type);
+                    ViewBag.error = "Đã tồn kỳ thi ở môn học " + sub.Subject_name;
+                    return View();
+                }
+                else
+                {
+                    subjects.Add(sub);
+                    var type = new TypeExam()
+                    {
+                        Name = model.Name,
+                        Total_questions = model.Total_questions,
+                        Time_to_do = model.Time_to_do,
+                        Subjects = subjects
+                    };
+                    examRepository.Insert(type);
 
-                return RedirectToAction("Index", "Subject");
+                    return RedirectToAction("Index", "Subject");
+                }
+                
             }
             else
             {
                 return View();
             }
+        }
+        public IActionResult CreateQuestion()
+            {
+                bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+                var user = HttpContext.Session.Get<User>(UserSession.USER);
+                var listSub = subjectRepository.GetAll().ToArray();
+                
+                ViewData["SUBS"] = listSub;
+                if (isLogin && user.IsAdmin())
+                {
+                    ViewData["USER"] = user;
+                    return View();
+                }
+                else
+                {
+                    return Redirect("/login");
+                    // return View("Views/Admin/Admin.cshtml");
+                }
 
+            }
+
+        
+        [HttpPost]
+        public IActionResult CreateQuestion(QuestionModel model)
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            var user = HttpContext.Session.Get<User>(UserSession.USER);
+            var listSub = subjectRepository.GetAll().ToArray();
+            if (!(isLogin && user.IsAdmin()))
+            {
+                return Redirect("/login");
+            }
+            ViewData["USER"] = user;
+            ViewData["SUBS"] = listSub;
+            string uniqueFileName = ProcessUploadedFile(model);
+            if (ModelState.IsValid && isLogin && user.IsAdmin())
+
+            {
+                var idSub = model.Id_Subject;
+                var sub = subjectRepository.GetById(idSub);
+                if(sub!= null)
+                {
+                    var question = new Question()
+                    {
+                        Content = model.Content,
+                        Answer_a = model.Answer_a,
+                        Answer_b = model.Answer_b,
+                        Answer_c = model.Answer_c,
+                        Answer_d = model.Answer_d,
+                        Correct_answer = model.Correct_answer,
+                        Img_content = uniqueFileName,
+                        Subject = sub
+                    };
+                    questionRepository.Insert(question);
+                    return RedirectToAction("Index", "Subject");
+                }
+            }
+                return View();
+        }
+
+        private string ProcessUploadedFile(QuestionModel model)
+        {
+            string uniqueFileName = null;
+
+            if (model.PICTURE != null)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.PICTURE.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.PICTURE.CopyTo(fileStream);
+                }
+            }
+
+            return uniqueFileName;
         }
     }
 }
+

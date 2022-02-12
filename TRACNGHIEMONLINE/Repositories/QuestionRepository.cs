@@ -8,11 +8,11 @@ using TRACNGHIEMONLINE.Models;
 
 namespace TRACNGHIEMONLINE.Repositories
 {
-    public class SubjectRepository : ISubjectRepository
+    public class QuestionRepository : IQuestionRepository
     {
         public readonly TracNghiemDbContext _context;
 
-        public SubjectRepository(TracNghiemDbContext context)
+        public QuestionRepository(TracNghiemDbContext context)
         {
             this._context = context;
         }
@@ -21,19 +21,19 @@ namespace TRACNGHIEMONLINE.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Subject> GetAll()
+        public IEnumerable<Question> GetAll()
         {
-            return _context.Subjects.Include(x=>x.TypeExams).AsQueryable();
+            return _context.Questions.Include(e => e.Subject).ThenInclude(x=>x.Tests).AsQueryable();
         }
 
-        public Subject GetById(object id)
+        public Question GetById(object id)
         {
-            return _context.Subjects.Include(x=>x.TypeExams).Where(x => x.Id_subject.ToString().Equals(id.ToString())).FirstOrDefault();
+            return _context.Questions.Include(e => e.Subject).ThenInclude(x => x.Tests).Where(x => x.Id_question.ToString().Equals(id.ToString())).FirstOrDefault();
         }
 
-        public void Insert(Subject obj)
+        public void Insert(Question obj)
         {
-            _context.Add<Subject>(obj);
+            _context.Add<Question>(obj);
             _context.SaveChanges();
         }
 
@@ -42,7 +42,7 @@ namespace TRACNGHIEMONLINE.Repositories
             throw new NotImplementedException();
         }
 
-        public void Update(Subject obj)
+        public void Update(Question obj)
         {
             throw new NotImplementedException();
         }

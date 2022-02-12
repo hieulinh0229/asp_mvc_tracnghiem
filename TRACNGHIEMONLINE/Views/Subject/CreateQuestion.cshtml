@@ -2,10 +2,10 @@
 @using TRACNGHIEMONLINE.Models
 @using TRACNGHIEMONLINE.Common
 @using TRACNGHIEMONLINE.Models.Enums
-@model TRACNGHIEMONLINE.Models.DTO.TypeExamModel
+@model TRACNGHIEMONLINE.Models.DTO.QuestionModel
 
 @{
-    ViewBag.Title = "Thêm mới kì kiêm tra";
+    ViewBag.Title = "Thêm mới câu h";
     Layout = "";
     User admin = ViewData["USER"] as User;
     Subject[] subjects = ViewData["SUBS"] as Subject[];
@@ -228,7 +228,7 @@
 
                 </div>
             </div>
-          
+
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -245,64 +245,96 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="form-horizontal form-material mx-2">
-                                    @using (Html.BeginForm("CreateTypeExam", "Subject", FormMethod.Post))
+                                    @using (Html.BeginForm("CreateQuestion", "Subject", FormMethod.Post))
                                     {
 
-                                    <div class="form-group">
                                         <div class="form-group">
-                                            <label class="col-md-12">Tên kì kiêm tra</label>
-                                            <div class="col-md-12">
-                                                <select class="form-control" id="Name" name="Name">
-                                                    <option value="@EnumTypExam.BAITAPTULUYEN.ToString()"> Bài tập tự luyện</option>
-                                                    <option value="@EnumTypExam.THIHOCKY.ToString()"> Thi học kỳ </option>
-                                                    <option value="@EnumTypExam.KIEMTRAGIUAKY.ToString()">Kiểm tra giữa kỳ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        @if (ViewBag.error != null)
-                                        {
                                             <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    <span style="color:red">@ViewBag.error</span>
+                                                <label class="col-md-12">Môn học</label>
+                                                <div class="col-md-12">
+                                                    <select class="form-control" id="Id_subject" name="Id_subject" >
+                                                        @foreach (var item in subjects)
+                                                        {
+                                                            <option value="@item.Id_subject">@item.Subject_name</option>
+                                                        }
+                                                    </select>
                                                 </div>
                                             </div>
+                                            @if (ViewBag.error != null)
+                                            {
+                                                <div class="form-group">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <span style="color:red">@ViewBag.error</span>
+                                                    </div>
+                                                </div>
 
-                                        }
+                                            }
 
-                                    </div>
+                                        </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">Tổng số câu hỏi</label>
+                                            <label class="col-md-12">Nội dung câu hỏi</label>
                                             <div class="col-md-12">
-                                                <input type="number" id="Total_questions" name="Total_questions" required 
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Total_questions, "", new { @class = "text-danger" })
+                                                <textarea type="text" id="Content" name="Content" required
+                                                          class="form-control form-control-line" rows="4" cols="50">
+                                                  </textarea>
+                                                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
                                             </div>
-                                        </div>  
-                                        
-                                        <div class="form-group">
-                                            <label class="col-md-12">Thời gian làm bài (Tính bằng phút)</label>
-                                            <div class="col-md-12">
-                                                <input type="number" id="Time_to_do" name="Time_to_do" required
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Time_to_do, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>   
-                                        
-                                        <div class="form-group">
-                                            <label class="col-md-12">Môn học</label>
-                                            <div class="col-md-12">
-                                                <select class="form-control" id="Id_sub" name="Id_sub">
-                                                    @foreach (var item in subjects)
-                                                    {
-                                                        <option value="@item.Id_subject">@item.Subject_name</option>
-                                                    }
-                                                </select>
+                                            <div class="form-group">
+                                                <label class="col-md-12">Ảnh</label>
+                                                <div class="col-md-12">
+                                                    @Html.TextBoxFor(model => model.PICTURE, new { type = "file", accept = "image/png, image/jpeg, image/gif" })
+                                                    @Html.ValidationMessageFor(model => model.PICTURE)
+                                                </div>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="col-md-12">Đáp án A</label>
+                                            <div class="col-md-12">
+                                                <textarea type="text" id="Answer_a" name="Answer_a" required
+                                                          class="form-control form-control-line" rows="4" cols="50">
+                                                  </textarea>
+                                                @Html.ValidationMessageFor(model => model.Answer_a, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Đáp án B</label>
+                                            <div class="col-md-12">
+                                                <textarea type="text" id="Answer_b" name="Answer_b" required
+                                                          class="form-control form-control-line" rows="4" cols="50">
+                                                  </textarea>
+                                                @Html.ValidationMessageFor(model => model.Answer_b, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Đáp án C</label>
+                                            <div class="col-md-12">
+                                                <textarea type="text" id="Answer_c" name="Answer_c" required
+                                                          class="form-control form-control-line" rows="4" cols="50">
+                                                  </textarea>
+                                                @Html.ValidationMessageFor(model => model.Answer_c, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Đáp án D</label>
+                                            <div class="col-md-12">
+                                                <textarea type="text" id="Answer_d" name="Answer_d" required
+                                                          class="form-control form-control-line" rows="4" cols="50">
+                                                  </textarea>
+                                                @Html.ValidationMessageFor(model => model.Answer_d, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>   
+                                        <div class="form-group">
+                                            <label class="col-md-12">Đáp án đúng</label>
+                                            <div class="col-md-12">
+                                                <textarea type="text" id="Correct_answer" name="Correct_answer" required
+                                                          class="form-control form-control-line" rows="4" cols="50">
+                                                  </textarea>
+                                                @Html.ValidationMessageFor(model => model.Correct_answer, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button type="submit"   class="btn btn-success text-white">Tạo mới</button>
+                                                <button type="submit" class="btn btn-success text-white">Tạo mới</button>
                                             </div>
                                         </div>
                                     }

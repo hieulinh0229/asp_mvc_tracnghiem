@@ -6,7 +6,7 @@ using TRACNGHIEMONLINE.Models;
 
 namespace TRACNGHIEMONLINE.Repositories
 {
-   public interface IStudentRepository : IRepository<Student>
+    public interface IQuestionRepository : IRepository<Question>
     {
     }
 }

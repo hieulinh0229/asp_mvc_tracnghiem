@@ -14,11 +14,13 @@ namespace TRACNGHIEMONLINE.Controllers
     public class AdminController : Controller
     {
         public readonly IAdminRepository adminRepository;
+        public readonly IClassRepository classRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public AdminController(IAdminRepository _adminRepository, IWebHostEnvironment hostEnvironment)
+        public AdminController(IAdminRepository _adminRepository, IWebHostEnvironment hostEnvironment, IClassRepository classRepository)
         {
             this.adminRepository = _adminRepository;
             this.webHostEnvironment = hostEnvironment;
+            this.classRepository = classRepository;
         }
         public IActionResult Index()
         {
@@ -40,6 +42,23 @@ namespace TRACNGHIEMONLINE.Controllers
             if (isLogin)
             {
                 var admin = HttpContext.Session.Get<User>(UserSession.USER);
+                return View(admin);
+            }    
+            else
+            {
+                return Redirect("/login");
+                // return View("Views/Admin/Admin.cshtml");
+            }
+        }      
+        
+        public IActionResult StudentManagement()
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            Class[] listClass = classRepository.GetAll().ToArray();
+            if (isLogin)
+            {
+                var admin = HttpContext.Session.Get<User>(UserSession.USER);
+                ViewData["CLASS"] = listClass;
                 return View(admin);
             }
             else

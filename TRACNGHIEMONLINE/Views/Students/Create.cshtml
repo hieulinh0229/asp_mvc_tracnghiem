@@ -1,15 +1,13 @@
 ﻿
-@using TRACNGHIEMONLINE.Models
 @using TRACNGHIEMONLINE.Common
-@using TRACNGHIEMONLINE.Models.Enums
-@model TRACNGHIEMONLINE.Models.DTO.TypeExamModel
+@using TRACNGHIEMONLINE.Models.DTO
+@model TRACNGHIEMONLINE.Common.User
 
 @{
-    ViewBag.Title = "Thêm mới kì kiêm tra";
+    ViewBag.Title = "Quản Lý Sinh Viên";
     Layout = "";
-    User admin = ViewData["USER"] as User;
-    Subject[] subjects = ViewData["SUBS"] as Subject[];
-    Dictionary<int, string> listTypeExs = ViewData["TYPES"] as Dictionary<int, string>;
+    User admin = ViewData["ADMIN"] as User;
+    Class[] classes = ViewData["CLASS"] as Class[];
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -215,12 +213,12 @@
             <div class="page-breadcrumb">
                 <div class="row align-items-center">
                     <div class="col-5">
-                        <h4 class="page-title">Create Page</h4>
+                        <h4 class="page-title">Thêm mới sinh viên</h4>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Create</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Detail</li>
                                 </ol>
                             </nav>
                         </div>
@@ -228,7 +226,15 @@
 
                 </div>
             </div>
-          
+            @if (ViewBag.error != null)
+            {
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <span style="color:red">@ViewBag.error</span>
+                    </div>
+                </div>
+
+            }
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -241,68 +247,91 @@
                 <!-- ============================================================== -->
                 <!-- Row -->
                 <div class="row">
+                    <!-- Column -->
                     <div class="col-lg-4 col-xlg-3 col-md-5">
                         <div class="card">
                             <div class="card-body">
                                 <div class="form-horizontal form-material mx-2">
-                                    @using (Html.BeginForm("CreateTypeExam", "Subject", FormMethod.Post))
+                                    @using (Html.BeginForm("create", "Students", FormMethod.Post))
                                     {
-
-                                    <div class="form-group">
                                         <div class="form-group">
-                                            <label class="col-md-12">Tên kì kiêm tra</label>
+                                            <label class="col-md-12">Name</label>
                                             <div class="col-md-12">
-                                                <select class="form-control" id="Name" name="Name">
-                                                    <option value="@EnumTypExam.BAITAPTULUYEN.ToString()"> Bài tập tự luyện</option>
-                                                    <option value="@EnumTypExam.THIHOCKY.ToString()"> Thi học kỳ </option>
-                                                    <option value="@EnumTypExam.KIEMTRAGIUAKY.ToString()">Kiểm tra giữa kỳ</option>
-                                                </select>
+
+                                                <input type="text" id="NAME" name="NAME" required
+                                                       class="form-control form-control-line">
+                                                @Html.ValidationMessageFor(model => model.NAME, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
-                                        @if (ViewBag.error != null)
-                                        {
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    <span style="color:red">@ViewBag.error</span>
-                                                </div>
-                                            </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">USERNAME</label>
+                                            <div class="col-md-12">
 
-                                        }
-
-                                    </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">Tổng số câu hỏi</label>
-                                            <div class="col-md-12">
-                                                <input type="number" id="Total_questions" name="Total_questions" required 
+                                                <input type="text" id="USERNAME" name="USERNAME" required
                                                        class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Total_questions, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.USERNAME, "", new { @class = "text-danger" })
                                             </div>
-                                        </div>  
-                                        
+                                        </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">Thời gian làm bài (Tính bằng phút)</label>
+                                            <label for="example-email" class="col-md-12">Email</label>
                                             <div class="col-md-12">
-                                                <input type="number" id="Time_to_do" name="Time_to_do" required
+                                                <input type="email" class="form-control form-control-line" name="EMAIL" id="EMAIL" autocomplete="off">
+                                                @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Phone No</label>
+                                            <div class="col-md-12">
+                                                <input type="text" id="PHONE" name="PHONE" required
                                                        class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.Time_to_do, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.PHONE, "", new { @class = "text-danger" })
                                             </div>
-                                        </div>   
-                                        
+                                        </div>
                                         <div class="form-group">
-                                            <label class="col-md-12">Môn học</label>
+                                            <label class="col-md-12">Address</label>
                                             <div class="col-md-12">
-                                                <select class="form-control" id="Id_sub" name="Id_sub">
-                                                    @foreach (var item in subjects)
+                                                <input type="text" id="ADDRESS" name="ADDRESS"
+                                                       class="form-control form-control-line" required>
+                                                @Html.ValidationMessageFor(model => model.ADDRESS, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Birthday</label>
+                                            <div class="col-md-12">
+                                                <input type="date" name="BIRTHDAY" id="BIRTHDAY" class="form-control form-control-line" required value="1900-01-01" )>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Gender</label>
+                                            <div class="col-sm-12">
+                                                <select class="form-select shadow-none form-control-line" id="GENDER" name="GENDER" required>
+                                                    @if (@admin.GENDER == "Nam")
                                                     {
-                                                        <option value="@item.Id_subject">@item.Subject_name</option>
+                                                        <option value="Nam" selected>Nam</option>
+                                                        <option value="Nữ">Nữ</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Nam">Nam</option>
+                                                        <option value="Nữ" selected>Nữ</option>
                                                     }
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="form-group">
+                                            <label class="col-md-12">Tên lớp</label>
+                                            <div class="col-md-12">
+                                                <select class="form-control" id="ID_CLASS" name="ID_CLASS" multiple required>
+                                                    @foreach (var cls in classes)
+                                                    {
+                                                        <option value="@cls.Id_class">@cls.Class_name</option>
+                                                    }
+                                                </select>
+                                               </div>
+                                           </div>
+                                           <div class="form-group">
                                             <div class="col-sm-12">
-                                                <button type="submit"   class="btn btn-success text-white">Tạo mới</button>
+                                                <button type="submit" class="btn btn-success text-white">Create </button>
                                             </div>
                                         </div>
                                     }
