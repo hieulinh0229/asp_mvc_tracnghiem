@@ -314,10 +314,11 @@
                                                         @for (var j = 0; j < typeXams.Length; j++)
                                                         {
                                                             var type = typeXams[j];
+                                                            var stt = j + 1;
                                                             if (type != null)
                                                             {
                                                                 <tr>
-                                                                    <th scope="row">@(j +1)</th>
+                                                                    <th scope="row">@stt</th>
                                                                     @if (type.Name.Equals(EnumTypExam.THIHOCKY.ToString()))
                                                                     {
 

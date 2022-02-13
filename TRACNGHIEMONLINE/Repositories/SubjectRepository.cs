@@ -28,7 +28,7 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public Subject GetById(object id)
         {
-            return _context.Subjects.Include(x=>x.TypeExams).Where(x => x.Id_subject.ToString().Equals(id.ToString())).FirstOrDefault();
+            return _context.Subjects.Include(x=>x.Questions).Include(x=>x.TypeExams).Where(x => x.Id_subject.ToString().Equals(id.ToString())).FirstOrDefault();
         }
 
         public void Insert(Subject obj)

@@ -10,8 +10,8 @@ using TRACNGHIEMONLINE.DAL;
 namespace TRACNGHIEMONLINE.Migrations
 {
     [DbContext(typeof(TracNghiemDbContext))]
-    [Migration("20220209151223_updatetablesaaa")]
-    partial class updatetablesaaa
+    [Migration("20220213143201_ADfirsDb")]
+    partial class ADfirsDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,19 +21,19 @@ namespace TRACNGHIEMONLINE.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("ClassStudent", b =>
+            modelBuilder.Entity("ClassSubject", b =>
                 {
-                    b.Property<int>("ClassId_class")
+                    b.Property<int>("ClassesId_class")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentsId_student")
+                    b.Property<int>("SubjectsId_subject")
                         .HasColumnType("int");
 
-                    b.HasKey("ClassId_class", "StudentsId_student");
+                    b.HasKey("ClassesId_class", "SubjectsId_subject");
 
-                    b.HasIndex("StudentsId_student");
+                    b.HasIndex("SubjectsId_subject");
 
-                    b.ToTable("ClassStudent");
+                    b.ToTable("ClassSubject");
                 });
 
             modelBuilder.Entity("QuestionTest", b =>
@@ -180,12 +180,6 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Property<int?>("SubjectId_subject")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Timestamps")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Unit")
-                        .HasColumnType("int");
-
                     b.HasKey("Id_question");
 
                     b.HasIndex("SubjectId_subject");
@@ -248,6 +242,9 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ClassId_class")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -279,6 +276,8 @@ namespace TRACNGHIEMONLINE.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id_student");
+
+                    b.HasIndex("ClassId_class");
 
                     b.HasIndex("permissionId_permission");
 
@@ -369,17 +368,17 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.ToTable("TypeExams");
                 });
 
-            modelBuilder.Entity("ClassStudent", b =>
+            modelBuilder.Entity("ClassSubject", b =>
                 {
                     b.HasOne("TRACNGHIEMONLINE.Models.Class", null)
                         .WithMany()
-                        .HasForeignKey("ClassId_class")
+                        .HasForeignKey("ClassesId_class")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TRACNGHIEMONLINE.Models.Student", null)
+                    b.HasOne("TRACNGHIEMONLINE.Models.Subject", null)
                         .WithMany()
-                        .HasForeignKey("StudentsId_student")
+                        .HasForeignKey("SubjectsId_subject")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -434,9 +433,15 @@ namespace TRACNGHIEMONLINE.Migrations
 
             modelBuilder.Entity("TRACNGHIEMONLINE.Models.Student", b =>
                 {
+                    b.HasOne("TRACNGHIEMONLINE.Models.Class", "Class")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassId_class");
+
                     b.HasOne("TRACNGHIEMONLINE.Models.Permission", "permission")
                         .WithMany("Students")
                         .HasForeignKey("permissionId_permission");
+
+                    b.Navigation("Class");
 
                     b.Navigation("permission");
                 });
@@ -460,7 +465,7 @@ namespace TRACNGHIEMONLINE.Migrations
                         .HasForeignKey("SubjectId_subject");
 
                     b.HasOne("TRACNGHIEMONLINE.Models.TypeExam", "Type")
-                        .WithMany()
+                        .WithMany("Tests")
                         .HasForeignKey("TypeId");
 
                     b.Navigation("Score");
@@ -472,6 +477,11 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Navigation("Subject");
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("TRACNGHIEMONLINE.Models.Class", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("TRACNGHIEMONLINE.Models.Permission", b =>
@@ -500,6 +510,11 @@ namespace TRACNGHIEMONLINE.Migrations
                 {
                     b.Navigation("Questions");
 
+                    b.Navigation("Tests");
+                });
+
+            modelBuilder.Entity("TRACNGHIEMONLINE.Models.TypeExam", b =>
+                {
                     b.Navigation("Tests");
                 });
 #pragma warning restore 612, 618

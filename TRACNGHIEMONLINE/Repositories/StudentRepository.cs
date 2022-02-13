@@ -28,7 +28,7 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public Student GetById(object id)
         {
-            throw new NotImplementedException();
+            return _context.Students.Include(e => e.permission).Include(x=>x.Class).ThenInclude(x=>x.Subjects).Where(x => x.Id_student.ToString().Equals(id.ToString())).FirstOrDefault();
         }
 
         public void Insert(Student obj)

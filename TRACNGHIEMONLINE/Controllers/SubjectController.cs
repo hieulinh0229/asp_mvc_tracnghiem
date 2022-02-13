@@ -158,38 +158,38 @@ namespace TRACNGHIEMONLINE.Controllers
             if (!(isLogin && user.IsAdmin()))
             {
                 return Redirect("/login");
-            }
-            if (ModelState.IsValid && isLogin && user.IsAdmin())
+            } else
             {
-                int idSub = model.Id_sub;
-                var sub = subjectRepository.GetById(idSub);
-                List<Subject> subjects = new List<Subject>();
-                var checkExits = sub.TypeExams.Any(x => x.Name.Equals(model.Name));
-                if(checkExits)
+                if (ModelState.IsValid && isLogin && user.IsAdmin())
                 {
-                    ViewBag.error = "Đã tồn kỳ thi ở môn học " + sub.Subject_name;
-                    return View();
-                }
-                else
-                {
-                    subjects.Add(sub);
+                    List<int> idSubs = model.Id_sub;
+                    List<Subject> subs = subjectRepository.GetAll().Where(x => idSubs.Contains(x.Id_subject)).ToList();
+                    List<Subject> subjects = subs.Where(x => x.Subject_name.Equals(model.Name)).ToList(); ;
+
+                    if (subjects.Count > 0)
+                    {
+                        string mes = String.Join(",", subjects.Select(x => x.Subject_name).ToList());
+                        ViewBag.error = "Đã tồn kỳ thi ở môn học " + mes;
+                        return View();
+                    }
                     var type = new TypeExam()
                     {
                         Name = model.Name,
                         Total_questions = model.Total_questions,
                         Time_to_do = model.Time_to_do,
-                        Subjects = subjects
+                        Subjects = subs
                     };
                     examRepository.Insert(type);
 
                     return RedirectToAction("Index", "Subject");
                 }
-                
+                else
+                {
+                    return View();
+
+                }
             }
-            else
-            {
-                return View();
-            }
+
         }
         public IActionResult CreateQuestion()
             {

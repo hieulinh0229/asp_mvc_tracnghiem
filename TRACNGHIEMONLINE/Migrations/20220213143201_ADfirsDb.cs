@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TRACNGHIEMONLINE.Migrations
 {
-    public partial class updatetablesaaa : Migration
+    public partial class ADfirsDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -140,11 +140,18 @@ namespace TRACNGHIEMONLINE.Migrations
                     time_start = table.Column<DateTime>(type: "datetime2", nullable: true),
                     time_remaining = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     last_login = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    permissionId_permission = table.Column<int>(type: "int", nullable: true)
+                    permissionId_permission = table.Column<int>(type: "int", nullable: true),
+                    ClassId_class = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id_student);
+                    table.ForeignKey(
+                        name: "FK_Students_Classes_ClassId_class",
+                        column: x => x.ClassId_class,
+                        principalTable: "Classes",
+                        principalColumn: "Id_class",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Students_Permissions_permissionId_permission",
                         column: x => x.permissionId_permission,
@@ -154,12 +161,35 @@ namespace TRACNGHIEMONLINE.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ClassSubject",
+                columns: table => new
+                {
+                    ClassesId_class = table.Column<int>(type: "int", nullable: false),
+                    SubjectsId_subject = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClassSubject", x => new { x.ClassesId_class, x.SubjectsId_subject });
+                    table.ForeignKey(
+                        name: "FK_ClassSubject_Classes_ClassesId_class",
+                        column: x => x.ClassesId_class,
+                        principalTable: "Classes",
+                        principalColumn: "Id_class",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClassSubject_Subjects_SubjectsId_subject",
+                        column: x => x.SubjectsId_subject,
+                        principalTable: "Subjects",
+                        principalColumn: "Id_subject",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
                     Id_question = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Unit = table.Column<int>(type: "int", nullable: false),
                     Img_content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Answer_a = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -167,7 +197,6 @@ namespace TRACNGHIEMONLINE.Migrations
                     Answer_c = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Answer_d = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Correct_answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamps = table.Column<DateTime>(type: "datetime2", nullable: true),
                     SubjectId_subject = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -202,30 +231,6 @@ namespace TRACNGHIEMONLINE.Migrations
                         column: x => x.TypeExamsId,
                         principalTable: "TypeExams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ClassStudent",
-                columns: table => new
-                {
-                    ClassId_class = table.Column<int>(type: "int", nullable: false),
-                    StudentsId_student = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ClassStudent", x => new { x.ClassId_class, x.StudentsId_student });
-                    table.ForeignKey(
-                        name: "FK_ClassStudent_Classes_ClassId_class",
-                        column: x => x.ClassId_class,
-                        principalTable: "Classes",
-                        principalColumn: "Id_class",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ClassStudent_Students_StudentsId_student",
-                        column: x => x.StudentsId_student,
-                        principalTable: "Students",
-                        principalColumn: "Id_student",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -308,9 +313,9 @@ namespace TRACNGHIEMONLINE.Migrations
                 column: "PermissionId_permission");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClassStudent_StudentsId_student",
-                table: "ClassStudent",
-                column: "StudentsId_student");
+                name: "IX_ClassSubject_SubjectsId_subject",
+                table: "ClassSubject",
+                column: "SubjectsId_subject");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_SubjectId_subject",
@@ -321,6 +326,11 @@ namespace TRACNGHIEMONLINE.Migrations
                 name: "IX_QuestionTest_TestsId_test",
                 table: "QuestionTest",
                 column: "TestsId_test");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_ClassId_class",
+                table: "Students",
+                column: "ClassId_class");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_permissionId_permission",
@@ -364,16 +374,13 @@ namespace TRACNGHIEMONLINE.Migrations
                 name: "Admins");
 
             migrationBuilder.DropTable(
-                name: "ClassStudent");
+                name: "ClassSubject");
 
             migrationBuilder.DropTable(
                 name: "QuestionTest");
 
             migrationBuilder.DropTable(
                 name: "SubjectTypeExam");
-
-            migrationBuilder.DropTable(
-                name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Questions");
@@ -395,6 +402,9 @@ namespace TRACNGHIEMONLINE.Migrations
 
             migrationBuilder.DropTable(
                 name: "TypeExams");
+
+            migrationBuilder.DropTable(
+                name: "Classes");
 
             migrationBuilder.DropTable(
                 name: "Permissions");

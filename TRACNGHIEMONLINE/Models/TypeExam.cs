@@ -11,6 +11,7 @@ namespace TRACNGHIEMONLINE.Models
         public TypeExam()
         {
             this.Subjects = new HashSet<Subject>();
+            this.Tests = new HashSet<Test>();
         }
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]
@@ -19,6 +20,7 @@ namespace TRACNGHIEMONLINE.Models
     public int Total_questions { get; set; }
     public int Time_to_do { get; set; }
     public virtual ICollection<Subject> Subjects { get; set; }
+    public virtual ICollection<Test> Tests { get; set; }
     }
 
 }

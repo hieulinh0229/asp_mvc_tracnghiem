@@ -24,6 +24,6 @@ namespace TRACNGHIEMONLINE.Models.DTO
         [Required(ErrorMessage = "ADDRESS is required.")]
         public String ADDRESS { get; set; }
         [Required(ErrorMessage = "CLASS is required.")]
-        public List<int> ID_CLASS { get; set; }
+        public int ID_CLASS { get; set; }
     }
 }

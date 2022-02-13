@@ -23,12 +23,14 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public IEnumerable<Class> GetAll()
         {
-            return _context.Classes.Include(x=>x.Students).AsQueryable();
+            return _context.Classes.Include(x => x.Subjects).Include(x => x.Students)
+                .ThenInclude(x=>x.Tests).ThenInclude(x => x.Type).AsQueryable();
         }
 
         public Class GetById(object id)
         {
-            throw new NotImplementedException();
+            return _context.Classes.Include(x => x.Subjects).Include(x => x.Students)
+                .ThenInclude(x => x.Tests).ThenInclude(x => x.Type).Where(x => x.Id_class.ToString().Equals(id.ToString())).FirstOrDefault();
         }
 
         public void Insert(Class obj)

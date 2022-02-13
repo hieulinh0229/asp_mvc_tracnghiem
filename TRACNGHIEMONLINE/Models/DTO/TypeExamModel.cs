@@ -14,6 +14,6 @@ namespace TRACNGHIEMONLINE.Models.DTO
         public int Total_questions { get; set; }
         [Range(1, 50, ErrorMessage = "Thời gian lớn hơn 1 bé hơn 50")]
         public int Time_to_do { get; set; }
-        public int Id_sub { get; set; }
+        public List<int> Id_sub { get; set; }
     }
 }

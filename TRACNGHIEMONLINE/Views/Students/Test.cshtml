@@ -1,13 +1,19 @@
-﻿
+﻿@using TRACNGHIEMONLINE.Models.Enums
+@using TRACNGHIEMONLINE.Models
 @using TRACNGHIEMONLINE.Common
 @using TRACNGHIEMONLINE.Models.DTO
-@model TRACNGHIEMONLINE.Common.User
+@model TRACNGHIEMONLINE.Models.DTO.TestModel
 
 @{
-    ViewBag.Title = "Quản Lý Sinh Viên";
+   
+    ViewBag.Title = "Trắc nghiệm online";
     Layout = "";
-    User admin = ViewData["ADMIN"] as User;
-    Class[] classes = ViewData["CLASS"] as Class[];
+
+    Subject sub = ViewData["SUBS"] as Subject;
+    User user = ViewData["USER"] as User;
+    TypeExam typeEx = ViewData["TYPE"] as TypeExam;
+    Question[] questions = ViewData["QUES"]  as Question[];
+
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -20,12 +26,18 @@
     <title>
         @ViewBag.Title
     </title>
+    <meta name="robots" content="noindex,nofollow">
     <link rel="canonical" href="https://www.wrappixel.com/templates/xtreme-admin-lite/" />
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="~/assets/images/favicon.png">
     <!-- Custom CSS -->
     <link href="~/dist/css/style.min.css" rel="stylesheet">
-
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 
 <body>
@@ -52,7 +64,7 @@
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="/home">
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -86,12 +98,6 @@
                     <!-- toggle and nav items -->
                     <!-- ============================================================== -->
                     <ul class="navbar-nav float-start me-auto">
-                        <!-- ============================================================== -->
-                        <!-- Search -->
-                        <!-- ============================================================== -->
-                        <li class="nav-item search-box">
-
-                        </li>
                     </ul>
                     <!-- ============================================================== -->
                     <!-- Right side toggle and nav items -->
@@ -143,34 +149,33 @@
                             <!-- User Profile-->
                             <div class="user-profile d-flex no-block dropdown m-t-20">
                                 <div class="user-pic">
-                                    @if (@admin.AVATAR == null)
+                                    @if (user.AVATAR == null)
                                     {
-
-                                        <img src="~/assets/images/users/1.jpg" alt="users"
+                                        <img src="~/assets/images/users/5.jpg"
                                              class="rounded-circle" width="40" />
-
                                     }
                                     else
                                     {
-                                        <img src="~/Uploads/@admin.AVATAR" alt="users"
+                                        <img src="~/Uploads/@user.AVATAR"
                                              class="rounded-circle" width="40" />
+
                                     }
                                 </div>
+
                                 <div class="user-content hide-menu m-l-10">
                                     <a href="#" class="" id="Userdd" role="button"
                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <h5 class="m-b-0 user-name font-medium">
-                                            @admin.NAME
-                                            <i class="fa fa-angle-down"></i>
+                                            @user.NAME <i class="fa fa-angle-down"></i>
                                         </h5>
-                                        <span class="op-5 user-email">@admin.EMAIL</span>
+                                        <span class="op-5 user-email">@user.EMAIL</span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="Userdd">
                                         <a class="dropdown-item" href="/admin/detail">
                                             <i class="ti-user m-r-5 m-l-5"></i> My Profile
                                         </a>
-
                                         <div class="dropdown-divider"></div>
+
                                         <a class="dropdown-item" href="/logout">
                                             <i class="fa fa-power-off m-r-5 m-l-5"></i> Logout
                                         </a>
@@ -179,12 +184,16 @@
                             </div>
                             <!-- End User Profile-->
                         </li>
-
-                        <!-- User Profile-->
+                        <li class="p-15 m-t-10">
+                            <a href="#"
+                               class="btn d-block w-100 create-btn text-white no-block d-flex align-items-center">
+                                <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Quản lý  môn học</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                               href="/admin" aria-expanded="false">
-                                <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span>
+                               href="/students/detail" aria-expanded="false">
+                                <i class="mdi mdi-account-network"></i><span class="hide-menu">Cài đặt tài khoản</span>
                             </a>
                         </li>
 
@@ -208,28 +217,26 @@
             <div class="page-breadcrumb">
                 <div class="row align-items-center">
                     <div class="col-5">
-                        <h4 class="page-title">Thêm mới sinh viên</h4>
-                        <div class="d-flex align-items-center">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Detail</li>
-                                </ol>
-                            </nav>
-                        </div>
+                        <h4 class="page-title">Bài kiểm tra </h4>
+                        <h5 class="page-title">Môn học: @sub.Subject_name </h5>
+                       
+                        @if (typeEx.Name.Equals(EnumTypExam.THIHOCKY.ToString()))
+                        {
+                            <h5> Thi học kỳ</h5>
+                        }
+                        @if (typeEx.Name.Equals(EnumTypExam.BAITAPTULUYEN.ToString()))
+                        {
+                            <h5>  Bài tập tư luyện</h5>
+                        }
+                        @if (typeEx.Name.Equals(EnumTypExam.KIEMTRAGIUAKY.ToString()))
+                        {
+                            <h5>Kiểm tra giữa kỳ</h5>
+                        }
+                        <h5 class="page-title">Thời gian:@typeEx.Time_to_do phút  </h5>
                     </div>
 
                 </div>
             </div>
-            @if (ViewBag.error != null)
-            {
-                <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                        <span style="color:red">@ViewBag.error</span>
-                    </div>
-                </div>
-
-            }
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -240,96 +247,76 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <!-- Row -->
                 <div class="row">
-                    <!-- Column -->
-                    <div class="col-lg-4 col-xlg-3 col-md-5">
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="form-horizontal form-material mx-2">
-                                    @using (Html.BeginForm("create", "Students", FormMethod.Post))
+                                <div class="table-responsive">
+                                    @if (ViewBag.error != null)
                                     {
                                         <div class="form-group">
-                                            <label class="col-md-12">Name</label>
-                                            <div class="col-md-12">
+                                            <div class="custom-control custom-checkbox">
+                                                <span style="color:red">@ViewBag.error</span>
+                                            </div>
+                                        </div>
 
-                                                <input type="text" id="NAME" name="NAME" required
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.NAME, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">USERNAME</label>
-                                            <div class="col-md-12">
-
-                                                <input type="text" id="USERNAME" name="USERNAME" required
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.USERNAME, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="example-email" class="col-md-12">Email</label>
-                                            <div class="col-md-12">
-                                                <input type="email" class="form-control form-control-line" name="EMAIL" id="EMAIL" autocomplete="off">
-                                                @Html.ValidationMessageFor(model => model.EMAIL, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">Phone No</label>
-                                            <div class="col-md-12">
-                                                <input type="text" id="PHONE" name="PHONE" required
-                                                       class="form-control form-control-line">
-                                                @Html.ValidationMessageFor(model => model.PHONE, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">Address</label>
-                                            <div class="col-md-12">
-                                                <input type="text" id="ADDRESS" name="ADDRESS"
-                                                       class="form-control form-control-line" required>
-                                                @Html.ValidationMessageFor(model => model.ADDRESS, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">Birthday</label>
-                                            <div class="col-md-12">
-                                                <input type="date" name="BIRTHDAY" id="BIRTHDAY" class="form-control form-control-line" required value="1900-01-01" )>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-12">Gender</label>
-                                            <div class="col-sm-12">
-                                                <select class="form-select shadow-none form-control-line" id="GENDER" name="GENDER" required>
-                                                        <option value="Nam" selected>Nam</option>
-                                                        <option value="Nữ">Nữ</option>
-                                                  
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-12">Tên lớp</label>
-                                            <div class="col-md-12">
-                                                <select class="form-control" id="ID_CLASS" name="ID_CLASS"  required>
-                                                    @foreach (var cls in classes)
-                                                    {
-                                                        <option value="@cls.Id_class">@cls.Class_name</option>
-                                                    }
-                                                </select>
-                                               </div>
-                                           </div>
-                                           <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <button type="submit" class="btn btn-success text-white">Create </button>
-                                            </div>
-                                        </div>
                                     }
-                                </div>
-                            </div>
+
+                                    @if (questions != null)
+                                    {
+                                        @using (Html.BeginForm("Test", "Students", FormMethod.Post))
+                                        {
+                                            @for (var q = 0; q < questions.Length; q++)
+                                            {
+                                                var stt = q + 1;
+                                                var question = questions[q];
+                                                <h4 class="card-title">
+                                                    <i class="m-r-5 font-22 mdi mdi-numeric-@stt-box-multiple-outline">@question.Content</i>
+                                                </h4>
+                                                <p>Chọn một trong các đáp án sau đây:</p>
+                                                <input type="hidden" id="Id_Question" name="Id_Question"
+                                                       class="form-control form-control-line" required value="@question.Id_question.">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="@stt" id="Answer" value="A">
+                                                    <label class="form-check-label">
+                                                        A.@question.Answer_a
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="@stt" id="Answer" value="B">
+                                                    <label class="form-check-label">
+                                                        B.@question.Answer_b
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="@stt" id="Answer" value="C">
+                                                    <label class="form-check-label">
+                                                        C.@question.Answer_c
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="@stt" id="Answer" value="D">
+                                                    <label class="form-check-label">
+                                                        D.@question.Answer_d
+                                                    </label>
+                                                </div>
+
+                                            }
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <button type="submit" class="btn btn-success text-white">Hoàn Thành </button>
+                                                </div>
+                                              </div>
+                                                }
+                                                }
+
+                                            </div>
+                                        </div>
+
                         </div>
                     </div>
-                    <!-- Column -->
+
                 </div>
-                <!-- Row -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -358,6 +345,7 @@
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
     </div>
+
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->

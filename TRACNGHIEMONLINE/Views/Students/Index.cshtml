@@ -5,8 +5,7 @@
     var user = Model;
     ViewBag.Title = "Trắc nghiệm online";
     Layout = "";
-    Subject[] subjects = ViewData["SUBS"] as Subject[];
-    Class[] classes = ViewData["CLASS"] as Class[];
+    Class clas = ViewData["CLASS"] as Class;
 
 }
 <!DOCTYPE html>
@@ -238,19 +237,14 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">
-                                    <i class="m-r-5 font-22 mdi mdi-numeric-1-box-multiple-outline"></i>
-                                    Danh sách lớp học
-                                </h4>
                                 <div class="table-responsive">
-                                    @for (var i = 0; i < classes.Length; i++)
+                                    @if (clas!=null)
                                     {
-                                        var clas = classes[i];
+                                       
                                         var subs = clas == null ? null : clas.Subjects.ToArray();
-                                        var index = @i + 1;
                                         <h6 class="card-title">
                                             <a href="javascript:void(0)">
-                                                <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
+                                                <i class="m-r-5 font-18 mdi mdi-numeric-1-box-multiple-outline"></i>
                                                 @clas.Class_name
                                             </a>
                                         </h6>
@@ -277,29 +271,41 @@
                                                 {
                                                     var sub = subs[j];
                                                     var types = sub == null ? null : sub.TypeExams.ToArray();
-                                                    if (types != null)
+
+                                                    <h6 class="card-title">
+                                                        <a href="javascript:void(0)">
+                                                            <i>@(j +1). @sub.Subject_name</i>
+
+                                                        </a>
+                                                    </h6>
+                                                    if (types != null && types.Length > 0)
                                                     {
-                                                        <h6 class="card-title">
-                                                            <a href="javascript:void(0)">
-                                                                <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
-                                                                @sub.Subject_name
-                                                            </a>
-                                                        </h6>
+                                                     
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">#</th>
-                                                                    <th scope="col">Tên kì kiểm tra</th>
+                                                                    <th scope="col">Kì kiểm tra</th>
                                                                     <th scope="col">Tổng số câu hỏi</th>
                                                                     <th scope="col">Thời gian làm bài</th>
+                                                                    <th scope="col">Số lần làm bài</th>
+                                                                    <th scope="col">Điểm </th>
+                                                                    <th scope="col">Trạng thái </th>
+                                                                    <th scope="col"></th>
                                                                 </tr>
                                                             </thead>
                                                             @for (var q = 0; q < types.Length; q++)
                                                             {
                                                                 var type = types[q];
+                                                                var listTest = type.Tests.Where(x => x.Student.Id_student == user.ID).ToList();
+                                                                var count = listTest.Count;
+                                                                var scores = listTest.Select(x => x.Score.Score_number);
+                                                                var status = listTest.Any(x=>x.Status.Status_name.Equals(EnumStatus.DONE)) ? "DONE" : "FAIL";
+                                                                var mes = String.Join(",",scores);
+                                                                var stt = q + 1;
                                                                 <tbody>
                                                                     <tr>
-                                                                        <th scope="row">@(j +1)</th>
+                                                                        <th scope="row">@stt</th>
                                                                         @if (type.Name.Equals(EnumTypExam.THIHOCKY.ToString()))
                                                                         {
                                                                             <td> Thi học kỳ</td>
@@ -312,54 +318,57 @@
                                                                         {
                                                                             <td>Kiểm tra giữa kỳ</td>
                                                                         }
-                                                                        <td>@sub.Subject_name</td>
                                                                         <td>@type.Total_questions</td>
                                                                         <td>@type.Time_to_do <a>Phut</a></td>
+                                                                        @if (@count == 0)
+                                                                        {
+                                                                            <td>Bạn chưa làm bài kiêm tra</td>
+                                                                            <td>Bạn chưa có điểm</td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@count</td>
+                                                                            <td>@mes</td>
+                                                                        }
+
+                                                                        @if (@status.Equals("FAIL"))
+                                                                        {
+                                                                            <td style="color:darkred">@status </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>@status </td>
+                                                                        }
+
+                                                                        @if (@count == 0)
+                                                                        { 
+                                                                            <td><a href="@Url.Action("Test", "Students", new { subId = sub.Id_subject, typeExId = type.Id}) ">Làm bài kiểm tra</a></td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td><a href="#">Làm lại bài kiểm tra</a></td>
+                                                                        }
+
+
                                                                     </tr>
-                                                                </tbody>
+                                        
+                                                                 </tbody>
                                                             }
-                                                            </table>
+                                                        </table>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-checkbox">
+                                                                <span style="color:red">Không có kỳ kiểm tra </span>
+                                                            </div>
+                                                        </div>
                                                     }
 
                                                 }
                                             </div>
                                         }
                                     }
-                                </div>
-                                <h4 class="card-title">
-                                    <i class="m-r-5 font-22 mdi mdi-numeric-2-box-multiple-outline"></i>
-                                    Danh sách lớp học
-                                </h4>
-                                <div class=" m-t-10">
-                                    <a href="/class/create">
-                                        <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Thêm lớp học</span>
-                                    </a>
-                                </div>
-                                <div class="table-responsive">
-                                    @for (var i = 0; i < classes.Length; i++)
-                                    {
-                                        var sub = classes[i];
-                                        var sts = sub == null ? null : sub.Students.ToArray();
-                                        var index = @i + 1;
-                                        <h6 class="card-title">
-                                            <a href="javascript:void(0)">
-                                                <i class="m-r-5 font-18 mdi mdi-numeric-@index-box-multiple-outline"></i>
-                                                @sub.Class_name
-                                            </a>
-                                        </h6>
-
-                                        @if (sts == null || sts.Length == 0)
-                                        {
-                                            <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    <span style="color:red">Không có sinh viên  </span>
-                                                </div>
-                                            </div>
-
-                                        }
-                                    }
-
-
                                 </div>
                             </div>
 
