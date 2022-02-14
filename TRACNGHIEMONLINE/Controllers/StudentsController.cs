@@ -156,13 +156,32 @@ namespace TRACNGHIEMONLINE.Controllers
 
                     };
                   
-                    var model = new TestModel()
-                    {
-                        subId = subId,
-                        typeExId = typeExId,
-                        listExams = listExams
-                    };
-                    return View(model);
+                 //  var model = new TestModel()
+                 //   {
+                 //       subId = subId,
+                 //       typeExId = typeExId,
+                 //       listExams = listExams
+                 //   };
+
+                    var evalVM = new Evaluation();
+
+                    //the below is hardcoded for DEMO. you may get the data from some  
+                    //other place and set the questions and answers
+
+                    var q1 = new Models.DTO.Question { ID = 1, QuestionText = "What is your favourite language" };
+                    q1.Answers.Add(new Answer { ID = 12, AnswerText = "PHP" });
+                    q1.Answers.Add(new Answer { ID = 13, AnswerText = "ASP.NET" });
+                    q1.Answers.Add(new Answer { ID = 14, AnswerText = "Java" });
+                    evalVM.Questions.Add(q1);
+
+                    var q2 = new Models.DTO.Question { ID = 2, QuestionText = "What is your favourite DB" };
+                    q2.Answers.Add(new Answer { ID = 16, AnswerText = "SQL Server" });
+                    q2.Answers.Add(new Answer { ID = 17, AnswerText = "MySQL" });
+                    q2.Answers.Add(new Answer { ID = 18, AnswerText = "Oracle" });
+                    evalVM.Questions.Add(q2);
+
+                    return View(evalVM);
+                  
                 }
                 else
                 {
@@ -177,7 +196,7 @@ namespace TRACNGHIEMONLINE.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Test(TestModel model)
+        public IActionResult Test(Evaluation model)
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             if (isLogin )
@@ -185,16 +204,16 @@ namespace TRACNGHIEMONLINE.Controllers
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
                 if (ModelState.IsValid)
                 {
-                    var subId = model.subId;
-                    var typeExId = model.typeExId;
+                   // var subId = model.subId;
+                   // var typeExId = model.typeExId;
 
-                    var sub = subjectRepository.GetById(subId);
-                    var typeEx = examRepository.GetById(typeExId);
+                   // var sub = subjectRepository.GetById(subId);
+                   // var typeEx = examRepository.GetById(typeExId);
                   
-                    if(sub!=null && typeEx!= null)
-                    {
+                   // if(sub!=null && typeEx!= null)
+                   // {
                         
-                    }
+                   // }
                 }
                 return RedirectToAction("index","Students");
             }

@@ -232,7 +232,7 @@ namespace TRACNGHIEMONLINE.Controllers
                 var sub = subjectRepository.GetById(idSub);
                 if(sub!= null)
                 {
-                    var question = new Question()
+                    var question = new Models.Question()
                     {
                         Content = model.Content,
                         Answer_a = model.Answer_a,
