@@ -9,6 +9,7 @@ namespace TRACNGHIEMONLINE.Models.DTO
     public class QuestionModel
     {
      
+        public string Id { get; set; }
         public string Content { get; set; }
         public string Answer_a { get; set; }
         public string Answer_b { get; set; }

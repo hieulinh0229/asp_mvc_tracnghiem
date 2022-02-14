@@ -134,7 +134,17 @@ namespace TRACNGHIEMONLINE.Controllers
                         return View();
                     }
                     var randomNumberList = GetRandomElements(listQuestion, numberQuestion);
-                    ViewData["QUES"] = randomNumberList.ToArray();
+                    ViewData["QUES"] = randomNumberList.Select(x=>new ExamModel()
+                    {
+                        Id_Question = x.Id_question,
+                        Id_Sub = sub.Id_subject,
+                        Answer_a = x.Answer_a,
+                        Answer_b = x.Answer_b,
+                        Answer_c = x.Answer_c,
+                        Answer_d = x.Answer_d,
+                        imageContent= x.Img_content,
+                        Id_Type = typeExId
+                    }).ToArray();
                     return View();
                 }
                 else
@@ -150,7 +160,7 @@ namespace TRACNGHIEMONLINE.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Test(TestModel model)
+        public IActionResult Test(List<ExamModel> model)
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             if (isLogin )
@@ -158,8 +168,8 @@ namespace TRACNGHIEMONLINE.Controllers
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
                 if (ModelState.IsValid)
                 {
-                    var subId = model.subId;
-                    var typeExId = model.typeExId;
+                    var subId = model.First().Id_Sub;
+                    var typeExId = model.First().Id_Type;
 
                     var sub = subjectRepository.GetById(subId);
                     var typeEx = examRepository.GetById(typeExId);
