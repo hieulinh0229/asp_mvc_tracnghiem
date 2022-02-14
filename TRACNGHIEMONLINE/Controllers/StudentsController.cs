@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -114,7 +115,7 @@ namespace TRACNGHIEMONLINE.Controllers
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             if (isLogin)
             {
-
+                
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
                 var sub = subjectRepository.GetById(subId);
                 var typeEx = examRepository.GetById(typeExId);
@@ -134,18 +135,34 @@ namespace TRACNGHIEMONLINE.Controllers
                         return View();
                     }
                     var randomNumberList = GetRandomElements(listQuestion, numberQuestion);
-                    ViewData["QUES"] = randomNumberList.Select(x=>new ExamModel()
+                    List<ExamModel> listExams = new List<ExamModel>();
+                    foreach (var item in randomNumberList)
                     {
-                        Id_Question = x.Id_question,
-                        Id_Sub = sub.Id_subject,
-                        Answer_a = x.Answer_a,
-                        Answer_b = x.Answer_b,
-                        Answer_c = x.Answer_c,
-                        Answer_d = x.Answer_d,
-                        imageContent= x.Img_content,
-                        Id_Type = typeExId
-                    }).ToArray();
-                    return View();
+                        var listAs = new List<Answer>();
+                        listAs.Add(new Answer() { ID = 1, AnswerText = item.Answer_a });
+                        listAs.Add(new Answer() { ID = 2, AnswerText = item.Answer_b });
+                        listAs.Add(new Answer() { ID = 3, AnswerText = item.Answer_c });
+                        listAs.Add(new Answer() { ID = 4, AnswerText = item.Answer_d });
+                        var ex = new ExamModel()
+                        {
+                            Id_Question = item.Id_question,
+                            Id_Sub = subId,
+                            Answers = listAs,
+                            Content = item.Content,
+                            imageContent = item.Img_content,
+                            Id_Type = typeExId
+                        };
+                        listExams.Add(ex);
+
+                    };
+                  
+                    var model = new TestModel()
+                    {
+                        subId = subId,
+                        typeExId = typeExId,
+                        listExams = listExams
+                    };
+                    return View(model);
                 }
                 else
                 {
@@ -160,7 +177,7 @@ namespace TRACNGHIEMONLINE.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Test(List<ExamModel> model)
+        public IActionResult Test(TestModel model)
         {
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             if (isLogin )
@@ -168,25 +185,18 @@ namespace TRACNGHIEMONLINE.Controllers
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
                 if (ModelState.IsValid)
                 {
-                    var subId = model.First().Id_Sub;
-                    var typeExId = model.First().Id_Type;
+                    var subId = model.subId;
+                    var typeExId = model.typeExId;
 
                     var sub = subjectRepository.GetById(subId);
                     var typeEx = examRepository.GetById(typeExId);
-                    var listQuestion = sub.Questions.ToList();
+                  
                     if(sub!=null && typeEx!= null)
                     {
                         
                     }
                 }
-
-                var listSub = subjectRepository.GetAll().ToArray();
-                var classes = studentRepository.GetById(user.ID).Class;
-                ViewData["CLASS"] = classes;
-
-                ViewData["SUBS"] = listSub;
-
-                return View(user);
+                return RedirectToAction("index","Students");
             }
             else
             {
@@ -197,6 +207,89 @@ namespace TRACNGHIEMONLINE.Controllers
         public  List<T> GetRandomElements<T>(IEnumerable<T> list, int elementsCount)
         {
             return list.OrderBy(x => Guid.NewGuid()).Take(elementsCount).ToList();
+        }
+        public IActionResult Detail()
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            if (isLogin)
+            {
+                var admin = HttpContext.Session.Get<User>(UserSession.USER);
+                return View(admin);
+            }
+            else
+            {
+                return Redirect("/login");
+                // return View("Views/Admin/Admin.cshtml");
+            }
+        }
+        [HttpPost]
+        public IActionResult EditUser(User user)
+        {
+            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
+            var oldUser = studentRepository.GetById(user.ID);
+
+            if (isLogin && oldUser != null && oldUser.permission.Permission_name.Equals(EnumPermission.STUDENT.ToString()))
+            {
+                if (user.PICTURE != null)
+                {
+                    try
+                    {
+                        string uniqueFileName = ProcessUploadedFile(user);
+                        oldUser.Avatar = uniqueFileName;
+                    }
+                    catch (Exception e)
+                    {
+                        ViewBag.error = e.Message.ToString();
+
+                    }
+                }
+                oldUser.Phone = user.PHONE;
+                oldUser.Email = user.EMAIL;
+                oldUser.Address = user.ADDRESS;
+                oldUser.Name = user.NAME;
+                oldUser.Gender = user.GENDER;
+                if (user.PASSWORD != null)
+                {
+                    oldUser.Password = Common.Encryptor.MD5Hash(user.PASSWORD);
+                }
+                oldUser.Birthday = user.BIRTHDAY;
+
+                try
+                {
+                    studentRepository.Update(oldUser);
+                    user.AVATAR = oldUser.Avatar;
+                    user.PICTURE = null;
+                    HttpContext.Session.Set<User>(UserSession.USER, user);
+
+                    return RedirectToAction("detail", "students");
+                }
+                catch
+                {
+                    ViewBag.error = "Xin vui lòng thử lại ";
+                    return RedirectToAction("detail", "students");
+                }
+            }
+            else
+            {
+                return Redirect("/login");
+            }
+        }
+        private string ProcessUploadedFile(User model)
+        {
+            string uniqueFileName = null;
+
+            if (model.PICTURE != null)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.PICTURE.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.PICTURE.CopyTo(fileStream);
+                }
+            }
+
+            return uniqueFileName;
         }
     }
 }

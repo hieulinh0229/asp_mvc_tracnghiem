@@ -49,7 +49,11 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public void Update(Student obj)
         {
-            throw new NotImplementedException();
+            if (obj != null)
+            {
+                _context.Update<Student>(obj);
+                _context.SaveChanges();
+            }
         }
     }
 }

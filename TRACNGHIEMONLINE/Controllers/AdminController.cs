@@ -33,10 +33,11 @@ namespace TRACNGHIEMONLINE.Controllers
         }
         public IActionResult Index()
         {
-            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
-            if (isLogin)
+            var user = HttpContext.Session.Get<User>(UserSession.USER);
+    
+            if (user.ISLOGIN && user.IsAdmin())
             {
-                var user = HttpContext.Session.Get<User>(UserSession.USER);
+               
                 var listSub = subjectRepository.GetAll().ToArray();
                 var classes = classRepository.GetAll().ToArray();
                 var types = examRepository.GetAll().ToArray();
@@ -111,7 +112,7 @@ namespace TRACNGHIEMONLINE.Controllers
             bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
             var oldAdmin = adminRepository.GetById(user.ID);
          
-            if (isLogin && oldAdmin!= null && oldAdmin.Permission.Permission_name.Equals(EnumPermission.ADMIN))
+            if (isLogin && oldAdmin!= null && oldAdmin.Permission.Permission_name.Equals(EnumPermission.ADMIN.ToString()))
                 {
                     if(user.PICTURE != null)
                     {

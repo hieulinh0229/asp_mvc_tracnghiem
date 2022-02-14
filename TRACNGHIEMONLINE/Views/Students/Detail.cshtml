@@ -1,20 +1,11 @@
-﻿@using TRACNGHIEMONLINE.Models.Enums
-@using TRACNGHIEMONLINE.Models
+﻿
 @using TRACNGHIEMONLINE.Common
-@using TRACNGHIEMONLINE.Models.DTO
-@model TRACNGHIEMONLINE.Models.DTO.TestModel
+@model TRACNGHIEMONLINE.Common.User
 
 @{
-
-    ViewBag.Title = "Trắc nghiệm online";
+    ViewBag.Title = "Quản Lý Admin";
     Layout = "";
-
-    Subject sub = ViewData["SUBS"] as Subject;
-    User user = ViewData["USER"] as User;
-    TypeExam typeEx = ViewData["TYPE"] as TypeExam;
-    ExamModel[] questions = ViewData["QUES"]  as ExamModel[];
-    var ss = Model.listExams;
-
+    var user = Model;
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -24,10 +15,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
+     <title>
         @ViewBag.Title
     </title>
-    <meta name="robots" content="noindex,nofollow">
     <link rel="canonical" href="https://www.wrappixel.com/templates/xtreme-admin-lite/" />
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="~/assets/images/favicon.png">
@@ -65,7 +55,7 @@
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
-                    <a class="navbar-brand" href="/home">
+                    <a class="navbar-brand" href="index.html">
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -99,6 +89,12 @@
                     <!-- toggle and nav items -->
                     <!-- ============================================================== -->
                     <ul class="navbar-nav float-start me-auto">
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item search-box">
+                 
+                        </li>
                     </ul>
                     <!-- ============================================================== -->
                     <!-- Right side toggle and nav items -->
@@ -150,24 +146,25 @@
                             <!-- User Profile-->
                             <div class="user-profile d-flex no-block dropdown m-t-20">
                                 <div class="user-pic">
-                                    @if (user.AVATAR == null)
+                                    @if (@user.AVATAR == null)
                                     {
-                                        <img src="~/assets/images/users/5.jpg"
+
+                                        <img src="~/assets/images/users/1.jpg" alt="users"
                                              class="rounded-circle" width="40" />
+
                                     }
                                     else
                                     {
-                                        <img src="~/Uploads/@user.AVATAR"
+                                        <img src="~/Uploads/@user.AVATAR" alt="users"
                                              class="rounded-circle" width="40" />
-
                                     }
                                 </div>
-
                                 <div class="user-content hide-menu m-l-10">
                                     <a href="#" class="" id="Userdd" role="button"
                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <h5 class="m-b-0 user-name font-medium">
-                                            @user.NAME <i class="fa fa-angle-down"></i>
+                                            @user.NAME
+                                            <i class="fa fa-angle-down"></i>
                                         </h5>
                                         <span class="op-5 user-email">@user.EMAIL</span>
                                     </a>
@@ -175,8 +172,8 @@
                                         <a class="dropdown-item" href="/admin/detail">
                                             <i class="ti-user m-r-5 m-l-5"></i> My Profile
                                         </a>
-                                        <div class="dropdown-divider"></div>
 
+                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="/logout">
                                             <i class="fa fa-power-off m-r-5 m-l-5"></i> Logout
                                         </a>
@@ -185,19 +182,15 @@
                             </div>
                             <!-- End User Profile-->
                         </li>
-                        <li class="p-15 m-t-10">
-                            <a href="#"
-                               class="btn d-block w-100 create-btn text-white no-block d-flex align-items-center">
-                                <i class="fa fa-plus-square"></i> <span class="hide-menu m-l-5">Quản lý  môn học</span>
-                            </a>
-                        </li>
+                   
+                        <!-- User Profile-->
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                               href="/students/detail" aria-expanded="false">
-                                <i class="mdi mdi-account-network"></i><span class="hide-menu">Cài đặt tài khoản</span>
+                               href="/students" aria-expanded="false">
+                                <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span>
                             </a>
                         </li>
-
+                 
                     </ul>
 
                 </nav>
@@ -218,29 +211,28 @@
             <div class="page-breadcrumb">
                 <div class="row align-items-center">
                     <div class="col-5">
-                        <h4 class="page-title">Bài kiểm tra </h4>
-                        <h5 class="page-title">Môn học: @sub.Subject_name </h5>
-                       
-                        @if (typeEx.Name.Equals(EnumTypExam.THIHOCKY.ToString()))
-                        {
-                            <h5> Thi học kỳ</h5>
-                        }
-                        @if (typeEx.Name.Equals(EnumTypExam.BAITAPTULUYEN.ToString()))
-                        {
-                            <h5>  Bài tập tự luyện</h5>
-                        }
-                        @if (typeEx.Name.Equals(EnumTypExam.KIEMTRAGIUAKY.ToString()))
-                        {
-                            <h5>Kiểm tra giữa kỳ</h5>
-                        }
-                      
-                        <div id="clock">
-                      <div style ="color:red" >Thời gian còn lại <span id="time">@typeEx.Time_to_do:00</span> phút</div>
-                     </div>
+                        <h4 class="page-title">Profile Page</h4>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Detail</li>
+                                </ol>
+                            </nav>
+                        </div>
                     </div>
 
                 </div>
             </div>
+            @if (ViewBag.error != null)
+            {
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <span style="color:red">@ViewBag.error</span>
+                </div>
+            </div>
+
+            }
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -251,52 +243,155 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
+                <!-- Row -->
                 <div class="row">
-                    <div class="col-12">
+                    <!-- Column -->
+                    <div class="col-lg-4 col-xlg-3 col-md-5">
                         <div class="card">
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    @if (ViewBag.error != null)
+                                <center class="m-t-30">
+                                    @if (@user.AVATAR == null)
                                     {
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <span style="color:red">@ViewBag.error</span>
-                                            </div>
-                                        </div>
+                                        <img src="~/assets/images/users/5.jpg"
+                                             class="rounded-circle" width="150" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Uploads/@user.AVATAR"
+                                             class="rounded-circle" width="150" />
 
                                     }
+                                    <h4 class="card-title m-t-10">@user.NAME</h4>
+                                    <h6 class="card-subtitle">Trắc nghiệm online</h6>
+                                    <div class="row text-center justify-content-md-center">
+                                    </div>
+                                </center>
+                            </div>
+                            <div>
+                                <hr>
+                            </div>
+                            <div class="card-body">
+                                <small class="text-muted">Email address </small>
+                                <h6>@user.EMAIL</h6> <small class="text-muted p-t-30 db">Phone</small>
+                                <h6>@user.PHONE</h6> <small class="text-muted p-t-30 db">Address</small>
+                                <h6>@user.ADDRESS</h6>
+                                <div class="map-box">
 
-                                    @if (Model.listExams != null)
-                                        @using (Html.BeginForm("Test", "Students", FormMethod.Post))
-                                        {
-                                            @for (var q = 0; q < Model.listExams.Count; q++)
-                                            {
-                                                var stt = q + 1;
-                                                var question = Model.listExams[q];
-                                                <h4 class="card-title">
-                                                    <i class="m-r-5 font-22 mdi mdi-numeric-@stt-box-multiple-outline">@question.Content</i>
-                                                </h4>
-                                                <p>Chọn một trong các đáp án sau đây:</p>
-                                                    @foreach (var a in question.Answers)
-                                                    {
-                                                    <p>
-                                                        @Html.RadioButtonFor(m=>m.listExams,a.ID)  @a.AnswerText 
-                                                    </p>
-                                                    }
-                                            }
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <button type="submit" class="btn btn-success text-white" id="submit-btn">Hoàn Thành </button>
-                                                </div>
-                                              </div>
-                                         }
+                                </div> <small class="text-muted p-t-30 db">Social Profile</small>
+                                <br />
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button>
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-lg-8 col-xlg-9 col-md-7">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-horizontal form-material mx-2">
+                                    @using (Html.BeginForm("EditUser", "Students", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+
+                                        <input type="hidden" id="ID" name="ID"
+                                               class="form-control form-control-line" required value="@user.ID">
+                                        <input type="hidden" id="USERNAME" name="USERNAME"
+                                               class="form-control form-control-line" required value="@user.USERNAME">
+                                        <input type="hidden" id="PICTURE" name="PICTURE"
+                                               class="form-control form-control-line" required value="@user.PICTURE">
+                                        <input type="hidden" id="PERMISSION" name="PERMISSION"
+                                               class="form-control form-control-line" required value="@user.PERMISSION">
+                                        <input type="hidden" id="PERMISSION_NAME" name="PERMISSION_NAME"
+                                               class="form-control form-control-line" required value="@user.PERMISSION_NAME">
+
+                                        <input type="hidden" id="ISLOGIN" name="ISLOGIN"
+                                               class="form-control form-control-line" required value="@user.ISLOGIN">
+
+
+                                        <div class="form-group">
+                                            <label class="col-md-12">Name</label>
+                                            <div class="col-md-12">
+
+                                                <input type="text" id="NAME" name="NAME" placeholder="@user.NAME" required value="@user.NAME"
+                                                       class="form-control form-control-line">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="example-email" class="col-md-12">Email</label>
+                                            <div class="col-md-12">
+                                                <input type="email" value="@user.EMAIL"
+                                                       class="form-control form-control-line" name="EMAIL"
+                                                       id="EMAIL">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Password</label>
+                                            <div class="col-md-12">
+                                                <input type="password" id="PASSWORD" name="PASSWORD"
+                                                       class="form-control form-control-line">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Phone No</label>
+                                            <div class="col-md-12">
+                                                <input type="text" value="@user.PHONE" id="PHONE" name="PHONE"
+                                                       class="form-control form-control-line">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Address</label>
+                                            <div class="col-md-12">
+                                                <input type="text" value="@user.ADDRESS" id="ADDRESS" name="ADDRESS"
+                                                       class="form-control form-control-line" required >
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label class="col-md-12">Birthday</label>
+                                            <div class="col-md-12">
+                                                <input type="date" name="BIRTHDAY" id="BIRTHDAY" class="form-control form-control-line"required value= @user.BIRTHDAY.ToString("yyyy-MM-dd")>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Gender</label>
+                                            <div class="col-sm-12">
+                                                <select class="form-select shadow-none form-control-line" id="GENDER" name="GENDER">
+                                                    @if (@user.GENDER == "Nam")
+                                                    {
+                                                        <option value="Nam" selected>Nam</option>
+                                                        <option value="Nữ">Nữ</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="Nam">Nam</option>
+                                                        <option value="Nữ" selected>Nữ</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Upload avatar</label>
+                                            <div class="col-md-12">
+                                                @Html.TextBoxFor(model => model.PICTURE, new { type = "file", accept = "image/png, image/jpeg, image/gif" })
+                                                @Html.ValidationMessageFor(model => model.PICTURE)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <button type="submit" class="btn btn-success text-white">Update Profile</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
-
+                    <!-- Column -->
                 </div>
+                <!-- Row -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -315,7 +410,7 @@
             <!-- footer -->
             <!-- ============================================================== -->
             <footer class="footer text-center">
-                All Rights Reserved by <a>TRACNGHIEMONLINE</a>.
+                All Rights Reserved by <a >TRACNGHIEMONLINE</a>.
             </footer>
             <!-- ============================================================== -->
             <!-- End footer -->
@@ -325,7 +420,6 @@
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
     </div>
-
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
@@ -342,36 +436,6 @@
     <script src="~/dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
     <script src="~/dist/js/custom.js"></script>
-    <script>
-        function startTimer(duration, display) {
-          
-                var timer = duration, minutes, seconds;
-                setInterval(function () {
-                    minutes = parseInt(timer / 60, 10)
-                    seconds = parseInt(timer % 60, 10);
-
-                    minutes = minutes < 10 ? "0" + minutes : minutes;
-                    seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                    display.textContent = minutes + ":" + seconds;
-
-                    if (--timer < 0) {
-                        timer = duration;
-                    }
-                }, 1000);
-            }
-
-        window.onload = function () {
-                  var fiveMinutes = 60 * @typeEx.Time_to_do,
-                display = document.querySelector('#time');
-            startTimer(fiveMinutes, display);
-
-            setTimeout(function() {
-             document.getElementById('submit-btn').click();
-             }, @typeEx.Time_to_do *60*1000);
-             };
-   
-    </script>
 </body>
 
 </html>

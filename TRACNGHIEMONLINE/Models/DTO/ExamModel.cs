@@ -11,15 +11,9 @@ namespace TRACNGHIEMONLINE.Models.DTO
         public int Id_Question { get; set; }
         public int Id_Sub { get; set; }
         public int Id_Type { get; set; }
-        public string Content { get; set; }
-        public string Answer_a { get; set; }
-        public bool a { get; set; }
-        public string Answer_b { get; set; }
-        public bool b { get; set; }
-        public string Answer_c { get; set; }
-        public bool c { get; set; }
-        public string Answer_d { get; set; }
-        public bool d { get; set; }
+        public List<Answer> Answers { set; get; }
+         public string Answer { get; set; }
+         public string Content { get; set; }
         public String imageContent { get; set; }
     }
 }

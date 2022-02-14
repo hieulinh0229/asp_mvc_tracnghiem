@@ -30,7 +30,7 @@ namespace TRACNGHIEMONLINE
             services.AddDbContext<TracNghiemDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDistributedMemoryCache();
             services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromMinutes(1);//Session Timeout.
+                options.IdleTimeout = TimeSpan.FromMinutes(60);//Session Timeout.
             });
             services.AddControllersWithViews();
             services.AddScoped<IAdminRepository, AdminRepository>();
