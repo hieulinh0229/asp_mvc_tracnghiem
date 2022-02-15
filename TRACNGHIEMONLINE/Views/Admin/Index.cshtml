@@ -372,6 +372,7 @@
                                                             <th scope="col">#</th>
                                                             <th scope="col">Tên bài kiểm tra</th>
                                                             <th scope="col">Sinh viên thực hiện</th>
+                                                            <th scope="col">Điểm</th>
                                                             <th scope="col">Trạng thái</th>
                                                         </tr>
                                                     </thead>
@@ -388,6 +389,7 @@
 
                                                                     <td>@test.Test_name</td>
                                                                     <td>@test.Student.Name</td>
+                                                                    <td>@((float)test.Score)</td>
                                                                     <td>@st</td>
 
                                                                 </tr>
