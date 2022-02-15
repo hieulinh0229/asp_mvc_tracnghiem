@@ -2,7 +2,7 @@
 @using TRACNGHIEMONLINE.Models
 @using TRACNGHIEMONLINE.Common
 @using TRACNGHIEMONLINE.Models.DTO
-@model TRACNGHIEMONLINE.Models.DTO.TestModel
+@model TRACNGHIEMONLINE.Models.DTO.Evaluation
 
 @{
 
@@ -13,7 +13,7 @@
     User user = ViewData["USER"] as User;
     TypeExam typeEx = ViewData["TYPE"] as TypeExam;
     ExamModel[] questions = ViewData["QUES"]  as ExamModel[];
-    var ss = Model.listExams;
+
 
 }
 <!DOCTYPE html>
@@ -265,33 +265,16 @@
                                         </div>
 
                                     }
-
-                                    @if (Model.listExams != null)
-                                        @using (Html.BeginForm("Test", "Students", FormMethod.Post))
+                                        <h2>Trắc nghiệm khách quan.</h2>
+                                        @using (Html.BeginForm())
                                         {
-                                            @for (var q = 0; q < Model.listExams.Count; q++)
-                                            {
-                                                var stt = q + 1;
-                                                var question = Model.listExams[q];
-                                                <h4 class="card-title">
-                                                    <i class="m-r-5 font-22 mdi mdi-numeric-@stt-box-multiple-outline">@question.Content</i>
-                                                </h4>
-                                                <p>Chọn một trong các đáp án sau đây:</p>
-                                                    @foreach (var a in question.Answers)
-                                                    {
-                                                    <p>
-                                                        @Html.RadioButtonFor(m=>m.listExams,a.ID)  @a.AnswerText 
-                                                    </p>
-                                                    }
-                                            }
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <button type="submit" class="btn btn-success text-white" id="submit-btn">Hoàn Thành </button>
-                                                </div>
-                                              </div>
-                                         }
-                                            </div>
-                                        </div>
+                                            @Html.HiddenFor(x=>x.Id_Sub)
+                                            @Html.HiddenFor(x=>x.Id_Type)
+                                            @Html.EditorFor(x=>x.Questions)
+                                            <button class="btn btn-primary" type="submit" id="submit-btn" onclick=" return confirm('Xác nhận nộp bài?')" >Hoàn thành</button>
+                                        }
+                                     
+                                    </div>
 
                         </div>
                     </div>

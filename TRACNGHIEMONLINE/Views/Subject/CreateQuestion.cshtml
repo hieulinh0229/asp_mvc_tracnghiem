@@ -325,12 +325,15 @@
                                         </div>   
                                         <div class="form-group">
                                             <label class="col-md-12">Đáp án đúng</label>
-                                            <div class="col-md-12">
-                                                <textarea type="text" id="Correct_answer" name="Correct_answer" required
-                                                          class="form-control form-control-line" rows="4" cols="50">
-                                                  </textarea>
+                                              <div class="col-md-12">
+                                                    <select class="form-control" id="Correct_answer" name="Correct_answer" required >
+                                                            <option value="A">A</option>
+                                                            <option value="B">B</option>
+                                                            <option value="C">C</option>
+                                                            <option value="D">D</option>
+                                                    </select>
+                                                </div>
                                                 @Html.ValidationMessageFor(model => model.Correct_answer, "", new { @class = "text-danger" })
-                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">

@@ -21,9 +21,14 @@ namespace TRACNGHIEMONLINE.Models
         public Nullable<System.DateTime> Timestamps { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual Student Student { get; set; }
-        public virtual Score Score { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public Decimal  Score { get; set; }
+        /**
+         * True: SUCCESS
+         * FALSE: FAIL
+         */
+        public bool  Status { get; set; }
         public virtual TypeExam Type { get; set; }
-        public virtual Status Status { get; set; }
         public virtual Subject Subject { get; set; }
     }
 }

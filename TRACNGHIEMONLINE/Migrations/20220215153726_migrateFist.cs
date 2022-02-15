@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TRACNGHIEMONLINE.Migrations
 {
-    public partial class ADfirsDb : Migration
+    public partial class migrateFist : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,35 +32,6 @@ namespace TRACNGHIEMONLINE.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissions", x => x.Id_permission);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Scores",
-                columns: table => new
-                {
-                    Id_score = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id_code = table.Column<int>(type: "int", nullable: false),
-                    Time_finish = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Score_number = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Scores", x => x.Id_score);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Statuses",
-                columns: table => new
-                {
-                    Id_status = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Status_name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamps = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Statuses", x => x.Id_status);
                 });
 
             migrationBuilder.CreateTable(
@@ -243,26 +214,14 @@ namespace TRACNGHIEMONLINE.Migrations
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Timestamps = table.Column<DateTime>(type: "datetime2", nullable: true),
                     StudentId_student = table.Column<int>(type: "int", nullable: true),
-                    ScoreId_score = table.Column<int>(type: "int", nullable: true),
+                    Score = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
                     TypeId = table.Column<int>(type: "int", nullable: true),
-                    StatusId_status = table.Column<int>(type: "int", nullable: true),
                     SubjectId_subject = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tests", x => x.Id_test);
-                    table.ForeignKey(
-                        name: "FK_Tests_Scores_ScoreId_score",
-                        column: x => x.ScoreId_score,
-                        principalTable: "Scores",
-                        principalColumn: "Id_score",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tests_Statuses_StatusId_status",
-                        column: x => x.StatusId_status,
-                        principalTable: "Statuses",
-                        principalColumn: "Id_status",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tests_Students_StudentId_student",
                         column: x => x.StudentId_student,
@@ -343,16 +302,6 @@ namespace TRACNGHIEMONLINE.Migrations
                 column: "TypeExamsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tests_ScoreId_score",
-                table: "Tests",
-                column: "ScoreId_score");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tests_StatusId_status",
-                table: "Tests",
-                column: "StatusId_status");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Tests_StudentId_student",
                 table: "Tests",
                 column: "StudentId_student");
@@ -387,12 +336,6 @@ namespace TRACNGHIEMONLINE.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tests");
-
-            migrationBuilder.DropTable(
-                name: "Scores");
-
-            migrationBuilder.DropTable(
-                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Students");

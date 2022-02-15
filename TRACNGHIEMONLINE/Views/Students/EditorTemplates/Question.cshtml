@@ -1,0 +1,21 @@
+﻿
+@model TRACNGHIEMONLINE.Models.DTO.Question
+
+<div>
+    @Html.HiddenFor(x=>x.ID)
+    @Html.HiddenFor(x=>x.CorrectAnswer)
+    
+    <p>Câu @Model.Index : @Model.QuestionText</p>
+        @if (@Model.ImageAnswer != null)
+          {
+            <img src="~/Uploads/@Model.ImageAnswer" />
+       }
+    <p>Chọn một trong các đáp án sau:</p>
+    @foreach (var a in Model.Answers)
+    {
+        String txt = a.ID + "." + a.AnswerText;
+        <p>
+        @Html.RadioButtonFor(b=>b.SelectedAnswer,a.ID)   @txt 
+        </p>
+    }
+</div>

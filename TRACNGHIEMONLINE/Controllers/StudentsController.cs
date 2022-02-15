@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,13 +22,16 @@ namespace TRACNGHIEMONLINE.Controllers
         public readonly ISubjectRepository subjectRepository;
         public readonly IQuestionRepository questionRepository;
         public readonly ITypeExamRepository examRepository;
-        public StudentsController(IAdminRepository _adminRepository,
+        public readonly ITestRepository testRepository;
+        public StudentsController(
+            IAdminRepository _adminRepository,
             IWebHostEnvironment hostEnvironment
             , IClassRepository classRepository,
             ISubjectRepository subjectRepository,
              ITypeExamRepository examRepository,
              IStudentRepository studentRepository,
-             IQuestionRepository questionRepository)
+             IQuestionRepository questionRepository,
+             ITestRepository testRepository)
         {
             this.adminRepository = _adminRepository;
             this.webHostEnvironment = hostEnvironment;
@@ -37,6 +40,7 @@ namespace TRACNGHIEMONLINE.Controllers
             this.examRepository = examRepository;
             this.studentRepository = studentRepository;
             this.questionRepository = questionRepository;
+            this.testRepository = testRepository;
         }
         public IActionResult Index()
         {
@@ -94,7 +98,7 @@ namespace TRACNGHIEMONLINE.Controllers
                             {
                                 Username = models.USERNAME,
                                 Name = models.NAME,
-                                Password = Common.Encryptor.MD5Hash("@1"),
+                                Password = Common.Encryptor.MD5Hash("1"),
                                 Phone = models.PHONE,
                                 Birthday = models.BIRTHDAY,
                                 Address = models.ADDRESS,
@@ -120,7 +124,7 @@ namespace TRACNGHIEMONLINE.Controllers
                 var sub = subjectRepository.GetById(subId);
                 var typeEx = examRepository.GetById(typeExId);
 
-                var listSub = subjectRepository.GetAll().ToArray();
+              
                 var listQuestion = sub.Questions.ToList();
                 ViewData["SUBS"] = sub;
                 ViewData["TYPE"] = typeEx;
@@ -135,58 +139,35 @@ namespace TRACNGHIEMONLINE.Controllers
                         return View();
                     }
                     var randomNumberList = GetRandomElements(listQuestion, numberQuestion);
-                    List<ExamModel> listExams = new List<ExamModel>();
-                    foreach (var item in randomNumberList)
+                   
+                    List<Models.DTO.Question> Questions = new List<Models.DTO.Question>();
+                    for (int i = 0; i < randomNumberList.Count; i++)
                     {
-                        var listAs = new List<Answer>();
-                        listAs.Add(new Answer() { ID = 1, AnswerText = item.Answer_a });
-                        listAs.Add(new Answer() { ID = 2, AnswerText = item.Answer_b });
-                        listAs.Add(new Answer() { ID = 3, AnswerText = item.Answer_c });
-                        listAs.Add(new Answer() { ID = 4, AnswerText = item.Answer_d });
-                        var ex = new ExamModel()
-                        {
-                            Id_Question = item.Id_question,
-                            Id_Sub = subId,
-                            Answers = listAs,
-                            Content = item.Content,
-                            imageContent = item.Img_content,
-                            Id_Type = typeExId
-                        };
-                        listExams.Add(ex);
-
+                        Models.Question item = randomNumberList[i];
+                        var ques = new Models.DTO.Question {
+                            Index = i +1,
+                            ID = item.Id_question,
+                            QuestionText = item.Content,
+                            CorrectAnswer = item.Correct_answer,
+                            ImageAnswer = item.Img_content };
+                        ques.Answers.Add(new Answer() { ID = "A", AnswerText = item.Answer_a });
+                        ques.Answers.Add(new Answer() { ID = "B", AnswerText = item.Answer_b });
+                        ques.Answers.Add(new Answer() { ID = "C", AnswerText = item.Answer_c });
+                        ques.Answers.Add(new Answer() { ID = "D", AnswerText = item.Answer_d });
+                        Questions.Add(ques);
                     };
-                  
-                 //  var model = new TestModel()
-                 //   {
-                 //       subId = subId,
-                 //       typeExId = typeExId,
-                 //       listExams = listExams
-                 //   };
-
-                    var evalVM = new Evaluation();
-
-                    //the below is hardcoded for DEMO. you may get the data from some  
-                    //other place and set the questions and answers
-
-                    var q1 = new Models.DTO.Question { ID = 1, QuestionText = "What is your favourite language" };
-                    q1.Answers.Add(new Answer { ID = 12, AnswerText = "PHP" });
-                    q1.Answers.Add(new Answer { ID = 13, AnswerText = "ASP.NET" });
-                    q1.Answers.Add(new Answer { ID = 14, AnswerText = "Java" });
-                    evalVM.Questions.Add(q1);
-
-                    var q2 = new Models.DTO.Question { ID = 2, QuestionText = "What is your favourite DB" };
-                    q2.Answers.Add(new Answer { ID = 16, AnswerText = "SQL Server" });
-                    q2.Answers.Add(new Answer { ID = 17, AnswerText = "MySQL" });
-                    q2.Answers.Add(new Answer { ID = 18, AnswerText = "Oracle" });
-                    evalVM.Questions.Add(q2);
-
+                    var evalVM = new Evaluation() { 
+                        Questions = Questions,
+                        Id_Sub = subId,
+                        Id_Type = typeExId
+                    };
                     return View(evalVM);
                   
                 }
                 else
                 {
                     ViewBag.error = " Không thể tạo đề kiểm tra";
-                    return View();
+                    return RedirectToAction("index", "Students");
                 }
             }
             else
@@ -204,16 +185,28 @@ namespace TRACNGHIEMONLINE.Controllers
                 var user = HttpContext.Session.Get<User>(UserSession.USER);
                 if (ModelState.IsValid)
                 {
-                   // var subId = model.subId;
-                   // var typeExId = model.typeExId;
+                   
+                    var sub = subjectRepository.GetById(model.Id_Sub);
+                    var typeEx = examRepository.GetById(model.Id_Type);
+                    var student = studentRepository.GetById(model.Id_Type);
+                    var listIdQues = model.Questions.Select(x => x.ID).ToList();
+                    var listQues = sub.Questions.Where(x => listIdQues.Contains(x.Id_question)).ToList();
+                    int countCorrect = model.Questions.Where(x => x.CorrectAnswer.Equals(x.SelectedAnswer)).ToList().Count;
+                    int countQ = model.Questions.Count;
+                    decimal SC = countCorrect / countQ * 100;
+                    var test = new Test()
+                    {
+                        Test_name = typeEx.Name,
+                        Timestamps = DateTime.Now,
+                        Student = student,
+                        Type = typeEx,
+                        Subject = sub,
+                        Questions = listQues,
+                        Score = Math.Round(SC, 0),
+                        Status = Math.Round(SC, 0) >=5
+                    };
 
-                   // var sub = subjectRepository.GetById(subId);
-                   // var typeEx = examRepository.GetById(typeExId);
-                  
-                   // if(sub!=null && typeEx!= null)
-                   // {
-                        
-                   // }
+                    testRepository.Insert(test);
                 }
                 return RedirectToAction("index","Students");
             }

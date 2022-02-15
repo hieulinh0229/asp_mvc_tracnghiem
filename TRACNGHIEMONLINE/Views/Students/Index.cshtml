@@ -287,9 +287,8 @@
                                                                     <th scope="col">#</th>
                                                                     <th scope="col">Kì kiểm tra</th>
                                                                     <th scope="col">Tổng số câu hỏi</th>
-                                                                    <th scope="col">Thời gian làm bài</th>
                                                                     <th scope="col">Số lần làm bài</th>
-                                                                    <th scope="col">Điểm </th>
+                                                                    <th scope="col">Điểm cao nhất </th>
                                                                     <th scope="col">Trạng thái </th>
                                                                     <th scope="col"></th>
                                                                 </tr>
@@ -299,9 +298,9 @@
                                                                 var type = types[q];
                                                                 var listTest = type.Tests.Where(x => x.Student.Id_student == user.ID).ToList();
                                                                 var count = listTest.Count;
-                                                                var scores = listTest.Select(x => x.Score.Score_number);
-                                                                var status = listTest.Any(x=>x.Status.Status_name.Equals(EnumStatus.DONE)) ? "DONE" : "FAIL";
-                                                                var mes = String.Join(",",scores);
+                                                                var scores = listTest.Max(x => x.Score);
+                                                                var status = listTest.Any(x=>x.Status) ? "DONE" : "FAIL";
+                                                              
                                                                 var stt = q + 1;
                                                                 <tbody>
                                                                     <tr>
@@ -319,7 +318,6 @@
                                                                             <td>Kiểm tra giữa kỳ</td>
                                                                         }
                                                                         <td>@type.Total_questions</td>
-                                                                        <td>@type.Time_to_do <a>Phut</a></td>
                                                                         @if (@count == 0)
                                                                         {
                                                                             <td>Bạn chưa làm bài kiêm tra</td>
@@ -328,7 +326,7 @@
                                                                         else
                                                                         {
                                                                             <td>@count</td>
-                                                                            <td>@mes</td>
+                                                                            <td>@scores</td>
                                                                         }
 
                                                                         @if (@status.Equals("FAIL"))
@@ -339,15 +337,26 @@
                                                                         {
                                                                             <td>@status </td>
                                                                         }
+                                                                        @if (@type.Total_questions < @sub.Questions.Count)
+                                                                        {
+                                                                            @if (@count == 0)
+                                                                            {
+                                                                                <td><a href="@Url.Action("Test", "Students", new { subId = sub.Id_subject, typeExId = type.Id}) ">Làm bài kiểm tra</a></td>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <td><a href="@Url.Action("Test", "Students", new { subId = sub.Id_subject, typeExId = type.Id}) ">Làm lại bài kiểm tra</a></td>
+                                                                            }
 
-                                                                        @if (@count == 0)
-                                                                        { 
-                                                                            <td><a href="@Url.Action("Test", "Students", new { subId = sub.Id_subject, typeExId = type.Id}) ">Làm bài kiểm tra</a></td>
+
+
                                                                         }
                                                                         else
                                                                         {
-                                                                            <td><a href="#">Làm lại bài kiểm tra</a></td>
+                                                                            <td><a>Không có đề kiểm tra cho môn học</a></td>
+
                                                                         }
+
 
 
                                                                     </tr>

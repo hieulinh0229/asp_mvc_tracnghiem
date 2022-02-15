@@ -404,6 +404,7 @@
                                                         @for (var j = 0; j < subjects.Length; i++)
                                                         {
                                                             var test = tests[j];
+                                                            var mes = @test.Status ? "DONE" : "FAIL";
                                                             if (test != null)
                                                             {
                                                                 <tr>
@@ -411,7 +412,7 @@
 
                                                                     <td>@test.Test_name</td>
                                                                     <td>@test.Note</td>
-                                                                    <td>@test.Status</td>
+                                                                    <td>@mes </td>
 
                                                                 </tr>
                                                             }

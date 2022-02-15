@@ -29,7 +29,7 @@ namespace TRACNGHIEMONLINE.Repositories
 
         public TypeExam GetById(object id)
         {
-            return _context.TypeExams.Where(x=>x.Id.ToString().Equals(id.ToString())).FirstOrDefault();
+            return _context.TypeExams.Where(x=>x.Id.ToString().Equals(id.ToString())).Include(x=>x.Tests).FirstOrDefault();
         }
 
         public void Insert(TypeExam obj)

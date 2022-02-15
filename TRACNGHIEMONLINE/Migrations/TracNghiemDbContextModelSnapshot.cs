@@ -185,45 +185,6 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("TRACNGHIEMONLINE.Models.Score", b =>
-                {
-                    b.Property<int>("Id_score")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("Id_code")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Score_number")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("Time_finish")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id_score");
-
-                    b.ToTable("Scores");
-                });
-
-            modelBuilder.Entity("TRACNGHIEMONLINE.Models.Status", b =>
-                {
-                    b.Property<int>("Id_status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Status_name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Timestamps")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id_status");
-
-                    b.ToTable("Statuses");
-                });
-
             modelBuilder.Entity("TRACNGHIEMONLINE.Models.Student", b =>
                 {
                     b.Property<int>("Id_student")
@@ -309,11 +270,11 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ScoreId_score")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Score")
+                        .HasColumnType("decimal(18,4)");
 
-                    b.Property<int?>("StatusId_status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("StudentId_student")
                         .HasColumnType("int");
@@ -331,10 +292,6 @@ namespace TRACNGHIEMONLINE.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id_test");
-
-                    b.HasIndex("ScoreId_score");
-
-                    b.HasIndex("StatusId_status");
 
                     b.HasIndex("StudentId_student");
 
@@ -446,14 +403,6 @@ namespace TRACNGHIEMONLINE.Migrations
 
             modelBuilder.Entity("TRACNGHIEMONLINE.Models.Test", b =>
                 {
-                    b.HasOne("TRACNGHIEMONLINE.Models.Score", "Score")
-                        .WithMany("Tests")
-                        .HasForeignKey("ScoreId_score");
-
-                    b.HasOne("TRACNGHIEMONLINE.Models.Status", "Status")
-                        .WithMany("Tests")
-                        .HasForeignKey("StatusId_status");
-
                     b.HasOne("TRACNGHIEMONLINE.Models.Student", "Student")
                         .WithMany("Tests")
                         .HasForeignKey("StudentId_student");
@@ -465,10 +414,6 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.HasOne("TRACNGHIEMONLINE.Models.TypeExam", "Type")
                         .WithMany("Tests")
                         .HasForeignKey("TypeId");
-
-                    b.Navigation("Score");
-
-                    b.Navigation("Status");
 
                     b.Navigation("Student");
 
@@ -487,16 +432,6 @@ namespace TRACNGHIEMONLINE.Migrations
                     b.Navigation("Admins");
 
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("TRACNGHIEMONLINE.Models.Score", b =>
-                {
-                    b.Navigation("Tests");
-                });
-
-            modelBuilder.Entity("TRACNGHIEMONLINE.Models.Status", b =>
-                {
-                    b.Navigation("Tests");
                 });
 
             modelBuilder.Entity("TRACNGHIEMONLINE.Models.Student", b =>
