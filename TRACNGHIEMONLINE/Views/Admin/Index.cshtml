@@ -362,7 +362,7 @@
                                         {
                                             <h6 class="card-title">
                                                 <a>
-                                                    <i>- DS Bài kiểm tra</i>
+                                                    <i>-  Bài kiểm tra</i>
                                                 </a>
                                             </h6>
                                             <div class="table-responsive">
@@ -371,27 +371,31 @@
                                                         <tr>
                                                             <th scope="col">#</th>
                                                             <th scope="col">Tên bài kiểm tra</th>
-                                                            <th scope="col">Ghi chú</th>
+                                                            <th scope="col">Sinh viên thực hiện</th>
                                                             <th scope="col">Trạng thái</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @for (var j = 0; j < subjects.Length; i++)
-                                                        {
-                                                            var test = tests[j];
+                                                        @{
+
+                                                            var max = tests.Max(x => x.Score);
+                                                            var test = tests.Where(x => x.Score == max).FirstOrDefault();
+                                                            var st = @test.Status ? "Đạt yêu cầu" : "Chưa đặt yêu cầu";
                                                             if (test != null)
                                                             {
                                                                 <tr>
-                                                                    <th scope="row">@j +1</th>
+                                                                    <th scope="row">1</th>
 
                                                                     <td>@test.Test_name</td>
-                                                                    <td>@test.Note</td>
-                                                                    <td>@test.Status</td>
+                                                                    <td>@test.Student.Name</td>
+                                                                    <td>@st</td>
 
                                                                 </tr>
                                                             }
-
                                                         }
+
+
+
                                                     </tbody>
 
                                                 </table>
