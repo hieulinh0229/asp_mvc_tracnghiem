@@ -20,17 +20,8 @@ namespace TRACNGHIEMONLINE.Controllers
 
         public IActionResult Index()
         {
-            bool isLogin = HttpContext.Session.Get<bool>(UserSession.ISLOGIN);
-            if (isLogin)
-            {
-                bool isAdmin = HttpContext.Session.Get<int>(UserSession.PERMISSION) == 1;
-                bool isSudent = HttpContext.Session.Get<int>(UserSession.PERMISSION) == 2;
-            }
-            else
-            {
-                return Redirect("Login");
-            }
-            return View();
+            var user = HttpContext.Session.Get<User>(UserSession.USER);
+            return View(user);
           
         }
     }
