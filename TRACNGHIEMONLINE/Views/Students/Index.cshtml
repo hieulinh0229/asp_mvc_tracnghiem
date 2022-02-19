@@ -253,8 +253,7 @@
                                                                 var type = types[q];
                                                                 var listTest = type.Tests.Where(x => x.Student.Id_student == user.ID).ToList();
                                                                 var count = listTest.Count;
-                                                                var max = listTest.Max(x => x.Score);
-                                                                var status = listTest.Any(x=>x.Status) ? "Đạt yêu cầu" : "Chưa đạt yêu cầu, cần làm lại";
+                                                                var status = listTest.Any(x=>x.Status) ? "Đạt yêu cầu" : "Chưa đạt yêu cầu";
                                                                 var scores = listTest.Select(x => (float)x.Score).ToArray();
                                                                 var ms = String.Join(" ; ", scores);
                                                                 var stt = q + 1;
@@ -274,26 +273,21 @@
                                                                             <td>Kiểm tra giữa kỳ</td>
                                                                         }
                                                                         <td>@type.Total_questions</td>
+                                                                           <td>@count</td>
                                                                         @if (@count == 0)
                                                                         {
-                                                                            <td>Bạn chưa làm bài kiêm tra</td>
+                                                                          
                                                                             <td>Bạn chưa có điểm</td>
+                                                                              <td>@count</td>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <td>@count</td>
+                                                                         
                                                                             <td>@ms</td>
-                                                                            <td>@((float)max)</td>
+                                                                            <td>@((float)listTest.Max(x => x.Score))</td>
                                                                         }
-
-                                                                        @if (@status.Equals("FAIL"))
-                                                                        {
-                                                                            <td style="color:darkred">@status </td>
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            <td>@status </td>
-                                                                        }
+                                                                         <td>@status </td>
+                                                                        
                                                                         @if (@type.Total_questions < @sub.Questions.Count)
                                                                         {
                                                                             @if (@count == 0)

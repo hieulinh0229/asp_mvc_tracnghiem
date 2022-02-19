@@ -163,12 +163,12 @@ namespace TRACNGHIEMONLINE.Controllers
                 if (ModelState.IsValid && isLogin && user.IsAdmin())
                 {
                     List<int> idSubs = model.Id_sub;
-                    List<Subject> subs = subjectRepository.GetAll().Where(x => idSubs.Contains(x.Id_subject)).ToList();
-                    List<Subject> subjects = subs.Where(x => x.Subject_name.Equals(model.Name)).ToList(); ;
+                    Subject subs = subjectRepository.GetAll().Where(x => idSubs.Contains(x.Id_subject)).FirstOrDefault();
+                    var types = subs == null? null:  subs.TypeExams.Where(x => x.Name.Equals(model.Name)).ToList(); ;
 
-                    if (subjects.Count > 0)
+                    if (types!= null && types.Count > 0 )
                     {
-                        string mes = String.Join(",", subjects.Select(x => x.Subject_name).ToList());
+                        string mes = String.Join(",", subs.Subject_name);
                         ViewBag.error = "Đã tồn kỳ thi ở môn học " + mes;
                         return View();
                     }
@@ -177,7 +177,7 @@ namespace TRACNGHIEMONLINE.Controllers
                         Name = model.Name,
                         Total_questions = model.Total_questions,
                         Time_to_do = model.Time_to_do,
-                        Subjects = subs
+                        Subjects = new[] { subs }
                     };
                     examRepository.Insert(type);
 

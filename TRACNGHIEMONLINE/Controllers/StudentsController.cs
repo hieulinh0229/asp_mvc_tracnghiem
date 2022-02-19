@@ -188,7 +188,7 @@ namespace TRACNGHIEMONLINE.Controllers
                    
                     var sub = subjectRepository.GetById(model.Id_Sub);
                     var typeEx = examRepository.GetById(model.Id_Type);
-                    var student = studentRepository.GetById(model.Id_Type);
+                    var student = studentRepository.GetById(user.ID);
                     var listIdQues = model.Questions.Select(x => x.ID).ToList();
                     var listQues = sub.Questions.Where(x => listIdQues.Contains(x.Id_question)).ToList();
                     int countCorrect = model.Questions.Where(x => x.CorrectAnswer.Equals(x.SelectedAnswer)).ToList().Count;
